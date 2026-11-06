@@ -21,8 +21,7 @@ type RouteView =
   | 'solutions-hub'
   | 'solution-detail'
   | 'portfolio'
-  | 'case-studies'
-  | 'case-study-detail'
+  | 'project-detail'
   | 'about'
   | 'contact';
 
@@ -67,7 +66,6 @@ export default function App() {
   const [activeView, setActiveView] = useState<RouteView>('home');
   const [selectedSolutionId, setSelectedSolutionId] = useState<string>(SOLUTION_PAGES[0].id);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState<string>(CASE_STUDIES[0].id);
-  const [caseStudyBackTarget, setCaseStudyBackTarget] = useState<'case-studies' | 'portfolio'>('case-studies');
 
   // Portfolio Category & Industry Filter State
   const [portfolioCategory, setPortfolioCategory] = useState<string>('all');
@@ -162,20 +160,9 @@ export default function App() {
     scrollToTop();
   };
 
-  const navigateCaseStudiesList = () => {
-    setActiveView('case-studies');
-    setOpenHeaderMenu(null);
-    setMobileMenuOpen(false);
-    scrollToTop();
-  };
-
-  const openCaseStudyDetailPage = (
-    caseStudyId: string,
-    fromPage: 'case-studies' | 'portfolio' = 'case-studies'
-  ) => {
-    setSelectedCaseStudyId(caseStudyId);
-    setCaseStudyBackTarget(fromPage);
-    setActiveView('case-study-detail');
+  const openProjectDetailPage = (projectId: string) => {
+    setSelectedCaseStudyId(projectId);
+    setActiveView('project-detail');
     setOpenHeaderMenu(null);
     setMobileMenuOpen(false);
     scrollToTop();
@@ -336,7 +323,9 @@ export default function App() {
                   setOpenHeaderMenu(openHeaderMenu === 'portfolio' ? null : 'portfolio')
                 }
                 className={`whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded transition-colors cursor-pointer ${
-                  openHeaderMenu === 'portfolio' || activeView === 'portfolio'
+                  openHeaderMenu === 'portfolio' ||
+                  activeView === 'portfolio' ||
+                  activeView === 'project-detail'
                     ? 'text-white border border-slate-600 bg-[#141722]'
                     : 'hover:text-white border border-transparent'
                 }`}
@@ -349,19 +338,6 @@ export default function App() {
                 />
               </button>
             </div>
-
-            {/* Case Study Directory Link */}
-            <button
-              type="button"
-              onClick={navigateCaseStudiesList}
-              className={`whitespace-nowrap shrink-0 transition-colors cursor-pointer py-1.5 ${
-                activeView === 'case-studies' || activeView === 'case-study-detail'
-                  ? 'text-white underline underline-offset-8 decoration-blue-500 decoration-2'
-                  : 'hover:text-white'
-              }`}
-            >
-              Case Study
-            </button>
 
             {/* About Link */}
             <button
@@ -580,11 +556,11 @@ export default function App() {
                       <button
                         key={proj.id}
                         type="button"
-                        onClick={() => openCaseStudyDetailPage(proj.id, 'portfolio')}
+                        onClick={() => openProjectDetailPage(proj.id)}
                         className="text-left p-3.5 rounded-xl border border-slate-800 bg-[#12151E] hover:border-blue-500/70 transition-colors cursor-pointer group"
                       >
                         <p className="text-[11px] font-mono-tabular text-blue-400">
-                          {proj.number} · {proj.categoryLabel}
+                          Project {proj.number} · {proj.categoryLabel}
                         </p>
                         <p className="mt-1 text-xs font-semibold text-white group-hover:text-blue-300 line-clamp-1">
                           {proj.title}
@@ -653,13 +629,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={navigateCaseStudiesList}
-              className="block w-full text-left font-medium text-white border-t border-slate-800/80 pt-3"
-            >
-              Case Study
-            </button>
             <button
               type="button"
               onClick={navigateAbout}
@@ -750,10 +719,10 @@ export default function App() {
                       </button>
                       <button
                         type="button"
-                        onClick={navigateCaseStudiesList}
+                        onClick={() => navigatePortfolio('all', 'All Industries')}
                         className="px-6 py-3 text-sm font-medium text-slate-200 border border-slate-700 rounded-lg hover:border-slate-500 hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                       >
-                        Explore Verified Case Studies
+                        Explore Portfolio Projects
                       </button>
                     </div>
                     <p className="mt-4 text-xs text-slate-400">
@@ -981,7 +950,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Featured Case Studies Preview */}
+            {/* Featured Portfolio Projects Preview */}
             <section className="py-20 border-t border-slate-800/80 bg-[#0B0D14]">
               <div className="max-w-[1200px] mx-auto px-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -990,15 +959,15 @@ export default function App() {
                       Verified Engagements
                     </p>
                     <h2 className="mt-2 text-3xl font-bold text-white">
-                      Featured Production Case Studies
+                      Featured Portfolio Projects
                     </h2>
                   </div>
                   <button
                     type="button"
-                    onClick={navigateCaseStudiesList}
+                    onClick={() => navigatePortfolio('all', 'All Industries')}
                     className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
-                    View All Case Study Tiles &rarr;
+                    View All Portfolio Projects &rarr;
                   </button>
                 </div>
 
@@ -1006,7 +975,7 @@ export default function App() {
                   {CASE_STUDIES.slice(0, 3).map((study) => (
                     <article
                       key={study.id}
-                      onClick={() => openCaseStudyDetailPage(study.id, 'case-studies')}
+                      onClick={() => openProjectDetailPage(study.id)}
                       className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500/70 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group"
                     >
                       <div>
@@ -1020,7 +989,7 @@ export default function App() {
                           <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-transparent to-transparent" />
                           <div className="absolute bottom-3 left-5 right-5">
                             <p className="text-xs font-mono-tabular text-blue-400">
-                              {study.number} · {study.industry}
+                              Project {study.number} · {study.industry}
                             </p>
                           </div>
                         </div>
@@ -1042,7 +1011,7 @@ export default function App() {
                           {study.stack.join(' · ')}
                         </p>
                         <span className="mt-4 block w-full text-center py-2.5 px-4 text-xs font-semibold text-white bg-slate-800 group-hover:bg-blue-600 rounded-lg transition-colors">
-                          Open Case Study Page &rarr;
+                          Open Project Page &rarr;
                         </span>
                       </div>
                     </article>
@@ -1348,15 +1317,15 @@ export default function App() {
                     Verified Proof of Execution
                   </p>
                   <h2 className="mt-1 text-2xl font-bold text-white">
-                    Related Case Studies in This Domain
+                    Related Projects in This Domain
                   </h2>
                 </div>
                 <button
                   type="button"
-                  onClick={navigateCaseStudiesList}
+                  onClick={() => navigatePortfolio('all', 'All Industries')}
                   className="text-xs font-semibold text-blue-400 hover:text-blue-300 cursor-pointer"
                 >
-                  View All Case Studies &rarr;
+                  View All Portfolio Projects &rarr;
                 </button>
               </div>
 
@@ -1366,12 +1335,12 @@ export default function App() {
                 ).map((cs) => (
                   <article
                     key={cs.id}
-                    onClick={() => openCaseStudyDetailPage(cs.id, 'case-studies')}
+                    onClick={() => openProjectDetailPage(cs.id)}
                     className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500 transition-colors p-7 flex flex-col justify-between cursor-pointer group"
                   >
                     <div>
                       <p className="text-xs font-mono-tabular text-blue-400">
-                        Case Study {cs.number} · {cs.industry}
+                        Project {cs.number} · {cs.industry}
                       </p>
                       <h3 className="mt-2 text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
                         {cs.title}
@@ -1388,7 +1357,7 @@ export default function App() {
                         {cs.stack.slice(0, 4).join(' · ')}
                       </span>
                       <span className="text-xs font-semibold text-white group-hover:text-blue-400">
-                        Open Case Study &rarr;
+                        Open Project &rarr;
                       </span>
                     </div>
                   </article>
@@ -1505,7 +1474,7 @@ export default function App() {
               {filteredPortfolioProjects.map((project) => (
                 <article
                   key={project.id}
-                  onClick={() => openCaseStudyDetailPage(project.id, 'portfolio')}
+                  onClick={() => openProjectDetailPage(project.id)}
                   className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group"
                 >
                   <div>
@@ -1519,7 +1488,7 @@ export default function App() {
                       <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-[#11141D]/20 to-transparent" />
                       <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between">
                         <span className="text-[11px] font-mono-tabular text-blue-400">
-                          {project.number} · {project.categoryLabel}
+                          Project {project.number} · {project.categoryLabel}
                         </span>
                       </div>
                     </div>
@@ -1552,113 +1521,32 @@ export default function App() {
         )}
 
         {/* =========================================================
-            5. CASE STUDIES DIRECTORY VIEW
+            5. DEDICATED PORTFOLIO PROJECT DEEP-DIVE PAGE
            ========================================================= */}
-        {activeView === 'case-studies' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-16">
-            <div className="max-w-3xl pb-12 border-b border-slate-800/80">
-              <p className="text-xs font-mono-tabular text-blue-400">
-                Case Studies Directory · Audited Enterprise Impact
-              </p>
-              <h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-white">
-                Select a Case Study Tile to Inspect the Full Architecture.
-              </h1>
-              <p className="mt-4 text-base text-slate-300 leading-relaxed">
-                Click any case study tile below to open its dedicated deep-dive page covering the Client’s Problem, the 3-Stage Technical Solution, the Production Tech Stack, and Audited Financial Impact.
-              </p>
-            </div>
-
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {CASE_STUDIES.map((cs) => (
-                <article
-                  key={cs.id}
-                  onClick={() => openCaseStudyDetailPage(cs.id, 'case-studies')}
-                  className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group"
-                >
-                  <div>
-                    <div className="aspect-[16/10] w-full overflow-hidden border-b border-slate-800 bg-slate-950 relative">
-                      <ResilientImage
-                        src={cs.image}
-                        alt={cs.title}
-                        fallbackTitle={cs.title}
-                        fallbackSubtitle={cs.industry}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-transparent to-transparent" />
-                      <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between text-xs font-mono-tabular">
-                        <span className="text-blue-400">
-                          Case {cs.number} · {cs.industry}
-                        </span>
-                        <span className="text-slate-400">{cs.duration}</span>
-                      </div>
-                    </div>
-
-                    <div className="p-6">
-                      <p className="text-sm font-mono-tabular font-bold text-white">
-                        {cs.headlineMetric}
-                      </p>
-                      <p className="text-xs font-mono-tabular text-blue-400 mt-0.5">
-                        {cs.secondaryMetric}
-                      </p>
-                      <h2 className="mt-3 text-lg font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-snug">
-                        {cs.title}
-                      </h2>
-                      <p className="mt-3 text-xs text-slate-300 leading-relaxed">
-                        {cs.twoSentenceSummary}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-6 pt-4 border-t border-slate-800/80">
-                    <p className="text-[11px] font-mono-tabular text-slate-400 truncate">
-                      {cs.stack.join(' · ')}
-                    </p>
-                    <span className="mt-4 block w-full text-center py-2.5 px-4 text-xs font-semibold text-white bg-slate-800 group-hover:bg-blue-600 rounded-lg transition-colors">
-                      Open Full Case Study Page &rarr;
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* =========================================================
-            6. DEDICATED CASE STUDY / PROJECT DEEP-DIVE PAGE
-           ========================================================= */}
-        {activeView === 'case-study-detail' && (
+        {activeView === 'project-detail' && (
           <div className="max-w-[1200px] mx-auto px-6 py-14">
             <div className="mb-10 p-4 rounded-xl border border-slate-800 bg-[#11141D] flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-xs">
                 <button
                   type="button"
-                  onClick={() =>
-                    caseStudyBackTarget === 'portfolio'
-                      ? navigatePortfolio()
-                      : navigateCaseStudiesList()
-                  }
+                  onClick={() => navigatePortfolio()}
                   className="text-slate-200 hover:text-blue-400 font-semibold inline-flex items-center gap-2 cursor-pointer"
                 >
                   <i className="fa-solid fa-arrow-left text-[10px]" />
-                  <span>
-                    {caseStudyBackTarget === 'portfolio'
-                      ? 'Back to Portfolio'
-                      : 'Back to All Case Study Tiles'}
-                  </span>
+                  <span>Back to Portfolio</span>
                 </button>
                 <span className="text-slate-600">·</span>
                 <span className="text-blue-400 font-mono-tabular">
-                  Case Study {activeCaseStudy.number} of {CASE_STUDIES.length}
+                  Project {activeCaseStudy.number} of {CASE_STUDIES.length}
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400 whitespace-nowrap">Jump to Case:</span>
+                <span className="text-xs text-slate-400 whitespace-nowrap">Jump to Project:</span>
                 <div className="relative">
                   <select
                     value={activeCaseStudy.id}
-                    onChange={(e) =>
-                      openCaseStudyDetailPage(e.target.value, caseStudyBackTarget)
-                    }
+                    onChange={(e) => openProjectDetailPage(e.target.value)}
                     className="appearance-none rounded-lg bg-[#090A0F] border border-slate-700 px-3.5 py-2 pr-8 text-xs font-medium text-white focus:border-blue-500 focus:outline-none cursor-pointer"
                   >
                     {CASE_STUDIES.map((cs) => (
@@ -1675,7 +1563,7 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80 items-center">
               <div className="lg:col-span-7">
                 <p className="text-xs font-mono-tabular text-blue-400">
-                  Case Study {activeCaseStudy.number} · {activeCaseStudy.industry} ·{' '}
+                  Project {activeCaseStudy.number} · {activeCaseStudy.industry} ·{' '}
                   {activeCaseStudy.duration} · {activeCaseStudy.engagementModel}
                 </p>
                 <h1 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
@@ -2315,13 +2203,6 @@ export default function App() {
               className="text-left hover:text-white transition-colors cursor-pointer"
             >
               Portfolio
-            </button>
-            <button
-              type="button"
-              onClick={navigateCaseStudiesList}
-              className="text-left hover:text-white transition-colors cursor-pointer"
-            >
-              Case Study
             </button>
             <button
               type="button"

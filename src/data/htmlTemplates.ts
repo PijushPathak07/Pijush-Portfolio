@@ -85,7 +85,6 @@ const SHARED_HEADER = (activePage: string) => `  <!-- Top Navigation Bar with Me
             </div>
           </div>
         </div>
-        <a href="case-study-template.html" class="${activePage === 'case-study-template.html' ? 'text-white underline underline-offset-8 decoration-blue-500' : 'hover:text-white transition-colors'} whitespace-nowrap shrink-0">Case Study</a>
         <a href="about.html" class="${activePage === 'about.html' ? 'text-white underline underline-offset-8 decoration-blue-500' : 'hover:text-white transition-colors'} whitespace-nowrap shrink-0">About</a>
       </nav>
       <div class="flex items-center gap-3 shrink-0">
@@ -112,7 +111,6 @@ const SHARED_FOOTER = `  <!-- Enterprise Footer (Vertical Navigation Links Witho
         <a href="index.html" class="hover:text-white transition-colors">Home</a>
         <a href="solutions.html" class="hover:text-white transition-colors">Solutions</a>
         <a href="portfolio.html" class="hover:text-white transition-colors">Portfolio</a>
-        <a href="case-study-template.html" class="hover:text-white transition-colors">Case Study</a>
         <a href="about.html" class="hover:text-white transition-colors">About</a>
         <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
       </div>
@@ -162,7 +160,7 @@ ${SHARED_HEADER('index.html')}
               Book a Consultation
             </a>
             <a href="portfolio.html" class="px-6 py-3 text-sm font-medium text-slate-200 border border-slate-700 rounded-lg hover:border-slate-500 hover:text-white transition-colors whitespace-nowrap">
-              Explore Verified Case Studies
+              Explore Portfolio Projects
             </a>
           </div>
         </div>
@@ -226,27 +224,8 @@ ${SHARED_HEADER('portfolio.html')}
 ${SHARED_FOOTER}`,
   },
   {
-    filename: 'case-study-template.html',
-    label: '4. case-study-template.html (Case Study Tile Directory & Deep Dive)',
-    description: 'Case study tile directory with clickable cards that open full-page deep dives covering Problem, Technical Solution, Stack, and Business Impact.',
-    code: `${SHARED_HEAD('Case Studies — Pijush Pathak', 'Enterprise Case Study Directory & Deep-Dive Templates.')}
-<body class="bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white">
-${SHARED_HEADER('case-study-template.html')}
-
-  <main class="max-w-[1200px] mx-auto px-6 py-16">
-    <div class="pb-12 border-b border-slate-800/80">
-      <p class="text-xs font-mono text-blue-400">Case Studies Directory &amp; Deep Dives</p>
-      <h1 class="mt-3 text-3xl sm:text-5xl font-bold tracking-tight text-white">
-        Verified Production Case Studies
-      </h1>
-    </div>
-  </main>
-
-${SHARED_FOOTER}`,
-  },
-  {
     filename: 'about.html',
-    label: '5. about.html (About Me)',
+    label: '4. about.html (About Me)',
     description: 'Executive bio highlighting B.Tech CSE foundation, experience scaling enterprise data solutions as a Data Scientist at Blackcoffer, LinkedIn & GitHub profiles, and 4-stage consulting methodology.',
     code: `${SHARED_HEAD('About Pijush Pathak — Principal AI & Data Science Consultant', 'B.Tech CSE Engineer and former Data Scientist at Blackcoffer.')}
 <body class="bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white">
@@ -260,8 +239,8 @@ ${SHARED_FOOTER}`,
   },
   {
     filename: 'contact.html',
-    label: '6. contact.html (Get In Touch — Web3Forms + Free 9AM-12AM IST Calendar + Calendly)',
-    description: 'Enterprise intake form wired to Web3Forms (f0ddd9c8-dba6-4690-b973-dc2613aba7bf -> workingwiththethunder@gmail.com), LinkedIn & GitHub coordinates, and Free Mon-Sun 9AM-12AM IST discovery call booking + Calendly.',
+    label: '5. contact.html (Get In Touch — Web3Forms + Free Calendar Booking + Calendly)',
+    description: 'Enterprise intake form wired to Web3Forms (f0ddd9c8-dba6-4690-b973-dc2613aba7bf -> workingwiththethunder@gmail.com), LinkedIn & GitHub coordinates, and Free Technical Discovery Call booking via Calendly.',
     code: `${SHARED_HEAD('Contact & Book a Consultation — Pijush Pathak', 'Schedule a free technical discovery call or send an architectural brief to workingwiththethunder@gmail.com.')}
 <body class="bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white">
 ${SHARED_HEADER('contact.html')}
