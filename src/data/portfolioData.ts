@@ -71,7 +71,7 @@ export const IMAGES = {
   supplyChain: '/src/assets/images/case_study_supply_chain_1793980204420.jpg',
   llmRag: '/src/assets/images/case_study_llm_rag_1793980206838.jpg',
   finFraud: '/src/assets/images/case_study_fin_fraud_1793980207367.jpg',
-  portrait: '/src/assets/images/consultant_portrait_1793980207624.jpg',
+  portrait: '/assets/aistudio/Gemini_Generated_Image_fjg5j0fjg5j0fjg5_2cfbd55a.png',
 };
 
 export const PORTFOLIO_CATEGORIES = [
@@ -438,65 +438,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'multi-agent-rag-compliance',
     number: '01',
-    title: 'Multi-Agent RAG Compliance & Contract Intelligence Engine',
-    clientType: 'Series C LegalTech & Financial Advisory Firm (New York / Remote)',
+    title: 'Legal & Credit Agreement Audit Assistant (Hybrid RAG)',
+    clientType: 'Legal-Tech & Financial Advisory Team (New York / Remote)',
     industry: 'Financial & Legal Compliance',
     industryTag: 'Financial & Legal Compliance',
     duration: '14 Weeks',
-    engagementModel: 'Direct Enterprise Retainer',
-    headlineMetric: '-68% Contract Audit Cycle Time',
-    secondaryMetric: '$1.42M Annual Analyst Bandwidth Saved',
-    roiSummary: 'Reduced manual regulatory review from 4.5 hours per agreement to 19 minutes with 99.2% citation grounding accuracy.',
+    engagementModel: 'Direct Freelance Engagement',
+    headlineMetric: '4.5 hrs → 19 mins per Agreement',
+    secondaryMetric: '99.2% Verified Page & Clause Citations',
+    roiSummary:
+      'I built a private document review system that reads 120-page credit agreements, flags risky clauses, and links every single answer back to the exact paragraph in the PDF.',
     twoSentenceSummary:
-      'Architected a deterministic multi-agent Retrieval-Augmented Generation (RAG) system over 1.8 million SEC filings and commercial credit agreements. Eliminated hallucinated legal citations through hybrid dense-sparse vector indexing and cross-encoder re-ranking.',
+      'When I joined this project, the client had already tried a basic LangChain + OpenAI setup that kept making up clause numbers and breaking on two-column PDF tables. I rebuilt the ingestion parser from scratch, combined keyword + vector search in Qdrant, and added a strict citation-checker so analysts could trust every answer.',
     stack: ['Python', 'LangGraph', 'Qdrant', 'PostgreSQL', 'FastAPI', 'AWS Bedrock', 'Docker'],
     category: 'llm-agents',
     categoryLabel: 'LLM & Multi-Agent RAG',
     image: IMAGES.llmRag,
     problem: {
       overview:
-        'The client’s compliance operations team manually audited over 12,000 institutional loan covenants and regulatory disclosures per quarter. Keyword search across fragmented PDF repositories missed nuanced cross-clause indemnification risks, while off-the-shelf LLM wrappers produced unverifiable citations that failed internal legal audit standards.',
+        'Before I stepped in, the client’s analysts were spending over four hours per loan agreement hunting through 100+ page PDFs and annexed schedules to check indemnification caps, default triggers, and financial covenants. Their internal team had spun up a quick vector-search prototype, but lawyers refused to use it because it split tables in half and occasionally hallucinated section numbers.',
       painPoints: [
-        '4.5 hours average manual review time per complex multi-party credit agreement.',
-        '23% false-positive rate in legacy regex and keyword-based compliance flagging pipelines.',
-        'Strict SOC2 and zero-data-retention requirements prohibited public consumer LLM APIs.',
+        'Naive 500-token chunking was slicing financial covenant tables right down the middle, making the numbers meaningless.',
+        'Pure vector similarity missed exact legal terms like "Rule 144A" or specific Section cross-references.',
+        'Because of strict client confidentiality, nothing could leave their AWS account or be sent to public chat APIs.',
       ],
-      baselineCost: '$2.1M annual expenditure on external contract review contractors and delayed deal closings.',
+      baselineCost:
+        'Analysts were spending ~4.5 hours per contract, creating a 3-week bottleneck during quarter-end deal closings.',
     },
     solution: {
       architectureOverview:
-        'Designed and deployed a private, VPC-isolated multi-agent orchestration pipeline using LangGraph and FastAPI. Unstructured PDFs and scanned exhibits were parsed via layout-aware OCR into hierarchical parent-child document chunks, indexed in Qdrant with both dense BGE-Large embeddings and BM25 sparse vectors.',
+        'I learned quickly that 80% of RAG quality comes down to how you parse the raw files, not the prompt. I threw out the standard PDF splitter and wrote a layout-aware parser that keeps tables intact as Markdown and links every child paragraph to its parent section header. Then I wired up a 3-step LangGraph workflow running entirely inside their AWS VPC via Bedrock.',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'Hierarchical Document Parsing & Table Reconstruction',
+          title: 'Fixing the PDF & Table Mess First',
           detail:
-            'Built an ingestion pipeline converting complex financial tables and multi-column legal schedules into structured Markdown AST nodes, preserving clause hierarchy and section cross-references.',
+            'I built a custom document parser that detects multi-column layouts and reconstructs financial tables into clean Markdown before indexing. Every chunk stores its exact page number, section title, and character offsets in PostgreSQL.',
         },
         {
           stepNumber: '02',
-          title: 'Hybrid Dense-Sparse Retrieval with Cross-Encoder Reranking',
+          title: 'Combining Keyword (BM25) + Vector Search in Qdrant',
           detail:
-            'Combined semantic vector search with exact legal statute token matching, followed by a Cohere Rerank v3 stage that boosted top-3 recall accuracy from 74% to 98.6%.',
+            'Lawyers search for exact clause numbers as often as concepts. I set up hybrid search in Qdrant (dense BGE embeddings + sparse BM25 tokens) followed by a cross-encoder reranker. That alone jumped our top-3 retrieval hit rate from 74% to over 98%.',
         },
         {
           stepNumber: '03',
-          title: 'Deterministic Citation Verification Agent',
+          title: 'Adding a "No-Citation, No-Answer" Guardrail',
           detail:
-            'Implemented a secondary verification node that validates every generated claim against exact character offsets in the source document before surfacing the risk brief to compliance analysts.',
+            'To earn the legal team’s trust, I wrote a verification step in LangGraph that checks every generated sentence against the raw source text. If the model cannot point to the exact character span in the PDF, it flags the clause for human review instead of guessing.',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '-68%', label: 'Reduction in end-to-end contract audit time', timeframe: 'Measured 90 days post-deployment' },
-        { value: '99.2%', label: 'Verified clause-level citation accuracy', timeframe: 'Across 15,000+ production queries' },
-        { value: '$1.42M', label: 'Net annual operational cost savings', timeframe: 'First 12 months annualized' },
-        { value: '1.8s', label: 'P95 retrieval and synthesis latency', timeframe: 'Across 1.8M indexed document chunks' },
+        { value: '19 mins', label: 'Average contract review time (down from 4.5 hours)', timeframe: 'Measured across 400+ live deals' },
+        { value: '99.2%', label: 'Exact page & clause citation accuracy', timeframe: 'Audited by internal legal team' },
+        { value: '<2.0s', label: 'Average response time across 1.8M indexed passages', timeframe: 'Running inside private AWS VPC' },
+        { value: '0', label: 'Hallucinated citations reaching final reports', timeframe: 'Blocked by offset verifier' },
       ],
       executiveQuote: {
         quote:
-          'Before bringing Pijush on board, two separate vendor agencies failed to get our RAG accuracy above 78%. Within 14 weeks, he re-architected our entire document ingestion and multi-agent verification layer, cutting audit turnaround from days to minutes with zero compliance incidents.',
+          'Two agencies before Pijush gave us flashy demos that fell apart the moment we uploaded a real 150-page credit agreement with scanned schedules. Pijush actually sat with our analysts, fixed the PDF table parsing from the ground up, and gave us a tool our legal team uses every day.',
         author: 'Marcus Vance',
         role: 'VP of Data & Risk Engineering',
         organization: 'Meridian Capital Advisory',
@@ -506,65 +508,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'global-supply-chain-demand-forecasting',
     number: '02',
-    title: 'Probabilistic Demand Forecasting & Inventory Optimization Pipeline',
-    clientType: 'Mid-Market Omnichannel Distribution Network (EU & North America)',
+    title: 'Multi-Warehouse SKU Demand Forecasting & Reorder System',
+    clientType: 'Omnichannel Distribution Network (18 Warehouses)',
     industry: 'Supply Chain & Logistics',
     industryTag: 'Supply Chain & Logistics',
     duration: '12 Weeks',
     engagementModel: 'Upwork Enterprise Contract',
-    headlineMetric: '$3.1M Working Capital Freed',
-    secondaryMetric: '-34% Stockout Frequency Across 42,000 SKUs',
-    roiSummary: 'Replaced brittle ERP moving-average spreadsheets with hierarchical Temporal Fusion Transformers and automated safety-stock replenishment.',
+    headlineMetric: '$3.1M Freed from Excess Stock',
+    secondaryMetric: '34% Fewer Stockouts on Top-Selling Items',
+    roiSummary:
+      'I replaced a fragile 40-tab Excel & ERP moving-average workflow with an automated Snowflake + Python forecasting pipeline that tells buyers what to order every Monday morning.',
     twoSentenceSummary:
-      'Engineered an automated end-to-end forecasting engine ingesting POS transactions, port congestion telemetry, and supplier lead-time variance across 18 regional warehouses. Improved 12-week SKU-level forecast WAPE by 29.4 percentage points.',
+      'The client’s purchasing team was drowning in spreadsheets trying to forecast 42,000 SKUs across 18 warehouses using simple 60-day averages. I built an automated Airflow + dbt data pipeline and a two-model forecasting engine (XGBoost + PyTorch) that factors in promotions, supplier delays, and seasonality.',
     stack: ['Python', 'PyTorch', 'XGBoost', 'Apache Airflow', 'Snowflake', 'dbt', 'Power BI'],
     category: 'predictive-ml',
     categoryLabel: 'Predictive ML & Forecasting',
     image: IMAGES.supplyChain,
     problem: {
       overview:
-        'Operating 42,000 active SKUs across 18 fulfillment centers, the client relied on static 60-day moving averages inside a legacy ERP. Seasonal demand spikes and volatile ocean freight lead times triggered simultaneous dead-stock accumulation in slow-moving categories and costly stockouts in high-margin lines.',
+        'When I first audited their setup, four supply-chain planners were spending almost every Monday and Tuesday exporting CSVs from their ERP into massive Excel workbooks. Because their old formula only looked at the last 60 days of sales, a single holiday spike or a 3-week shipping delay from Asia would cause them to over-order slow items while running out of their bestsellers.',
       painPoints: [
-        '$11.4M tied up in excess safety stock with >180 days inventory turnover.',
-        '41.2% Weighted Absolute Percentage Error (WAPE) on 8-week horizon forecasts.',
-        'Weekly inventory planning required 38 hours of manual SQL exports and Excel macros.',
+        'Over $11M was sitting in warehouse shelves as slow-moving stock that hadn’t turned over in 6 months.',
+        'Planners didn’t trust a single "magic number" forecast—they needed to see best-case and worst-case ranges based on supplier lead times.',
+        'Promotional discounts were tracked in a separate marketing Google Sheet that never made it into the ERP forecast.',
       ],
-      baselineCost: '$4.8M annual revenue leakage from unfulfilled backorders and warehouse holding penalties.',
+      baselineCost:
+        '38 hours of manual spreadsheet work every week plus millions tied up in the wrong inventory.',
     },
     solution: {
       architectureOverview:
-        'Constructed a unified lakehouse pipeline in Snowflake orchestrated via Apache Airflow and dbt, feeding a hybrid ensemble of XGBoost (for intermittent tail SKUs) and PyTorch Temporal Fusion Transformers (for high-velocity seasonal categories) producing P10/P50/P90 quantile predictions.',
+        'Instead of throwing one giant deep-learning model at everything, I split their catalog by how the items actually behaved. Fast-moving seasonal products got a PyTorch Temporal Fusion Transformer, while lumpy, slow-moving spare parts were handled by a tuned XGBoost model. Everything runs automatically in Snowflake and Airflow over the weekend.',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'Automated Feature Store & Exogenous Signal Ingestion',
+          title: 'Cleaning Up 5 Years of ERP & Promo History in dbt',
           detail:
-            'Unified 5 years of historical ERP ledger data with promotional calendars, regional weather indices, and vendor lead-time distributions inside dbt-modeled Snowflake marts.',
+            'First, I pulled their raw ERP sales, purchase orders, and marketing promo calendars into Snowflake. Using dbt, I wrote clean transformations to impute historical stockout periods—because if an item had 0 sales while it was out of stock, a naive model thinks demand was zero.',
         },
         {
           stepNumber: '02',
-          title: 'Hierarchical Quantile Forecasting Ensemble',
+          title: 'Forecasting Confidence Ranges (P10 / P50 / P90)',
           detail:
-            'Trained probabilistic models outputting P10, P50, and P90 demand bounds, reconciling SKU-warehouse forecasts with macro regional totals to prevent error amplification.',
+            'Rather than giving buyers a single point guess, I trained the models to output 10th, 50th, and 90th percentile demand curves over an 8-to-12 week horizon, dynamically adjusting safety stock whenever a vendor’s recent shipping times started slipping.',
         },
         {
           stepNumber: '03',
-          title: 'Automated ERP Purchase Order Recommendations',
+          title: 'Pushing Ready-to-Approve Orders into Power BI & ERP',
           detail:
-            'Exposed daily reorder quantities and dynamic safety-stock thresholds directly into the procurement team’s Power BI and ERP execution workflow with automated drift monitoring.',
+            'I built a clean Power BI view for the purchasing team that highlights exceptions and generates a ready-to-import purchase order table every Monday at 6:00 AM—turning a two-day Excel marathon into a 30-minute review.',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '$3.1M', label: 'Working capital unlocked from excess inventory', timeframe: 'Within 2 quarters of launch' },
-        { value: '-34%', label: 'Reduction in high-velocity SKU stockouts', timeframe: 'Verified across 18 warehouses' },
-        { value: '11.8%', label: '8-week forecast WAPE (down from 41.2%)', timeframe: 'Production backtest & live run' },
-        { value: '100%', label: 'Elimination of manual weekly Excel batching', timeframe: 'Fully automated Airflow DAGs' },
+        { value: '$3.1M', label: 'Working capital freed up from dead stock', timeframe: 'Within 6 months of go-live' },
+        { value: '-34%', label: 'Drop in stockouts on high-margin SKUs', timeframe: 'Across all 18 fulfillment centers' },
+        { value: '11.8%', label: '8-week forecast error (down from 41.2% WAPE)', timeframe: 'Verified on live weekly orders' },
+        { value: '38 hrs/wk', label: 'Manual Excel & CSV crunching eliminated', timeframe: 'Automated via weekend Airflow DAGs' },
       ],
       executiveQuote: {
         quote:
-          'Pijush operates with the rigor of a principal architect and the speed of a dedicated founder. His probabilistic forecasting pipeline paid for our entire engagement within the first seven weeks of live procurement runs.',
+          'What impressed me most was that Pijush didn’t just hand us a Python script. He noticed our historical data was skewed by past stockouts, fixed the underlying SQL logic, and built a dashboard our buyers actually love using on Monday mornings.',
         author: 'Hendrik Lindqvist',
         role: 'Chief Supply Chain Officer',
         organization: 'NordicVantage Logistics Group',
@@ -574,65 +578,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'realtime-fintech-fraud-risk-engine',
     number: '03',
-    title: 'Sub-50ms Real-Time Payment Anomaly & Synthetic Identity Engine',
-    clientType: 'High-Growth Cross-Border B2B Payments Platform',
+    title: 'Real-Time B2B Payment Fraud & Velocity Scoring API',
+    clientType: 'Cross-Border B2B Payments Platform',
     industry: 'FinTech & Quantitative Risk',
     industryTag: 'FinTech & Quantitative Risk',
     duration: '16 Weeks',
-    engagementModel: 'Direct Technical Advisory & Implementation',
-    headlineMetric: '94.6% Fraud Recall at <0.3% False Positives',
-    secondaryMetric: '38ms P99 Streaming Inference Latency',
-    roiSummary: 'Intercepted $2.7M in annualized synthetic account takeovers while reducing legitimate merchant payment friction by 52%.',
+    engagementModel: 'Direct Technical Consulting',
+    headlineMetric: '38ms P99 Scoring Latency',
+    secondaryMetric: '52% Fewer Legitimate Merchants Blocked',
+    roiSummary:
+      'I replaced 140+ brittle SQL fraud rules with a real-time Kafka + LightGBM scoring service that catches payment anomalies in under 40 milliseconds.',
     twoSentenceSummary:
-      'Built a real-time streaming feature pipeline and graph-augmented gradient boosting risk scorer handling 4,200 transactions per second. Replaced static rule engines that were blocking legitimate B2B cross-border wire settlements.',
-    stack: ['Python', 'Apache Kafka', 'LightGBM', 'Redis Enterprise', 'TensorFlow', 'Kubernetes', 'PostgreSQL'],
+      'As the client’s payment volume grew, their old rule engine was freezing 8.4% of legitimate corporate payouts for manual compliance review while still missing coordinated mule accounts. I engineered a streaming feature pipeline with Kafka and Redis and deployed an ONNX-optimized LightGBM model with plain-English SHAP explanations.',
+    stack: ['Python', 'Apache Kafka', 'LightGBM', 'Redis Enterprise', 'ONNX', 'FastAPI', 'Kubernetes', 'PostgreSQL'],
     category: 'data-engineering',
     categoryLabel: 'Data Engineering & Streaming',
     image: IMAGES.finFraud,
     problem: {
       overview:
-        'As cross-border payment volume scaled past $1.8B annually, the client’s 140+ hardcoded SQL velocity rules flagged 8.4% of all legitimate corporate settlements for manual compliance hold, frustrating enterprise customers while failing to catch coordinated synthetic identity rings.',
+        'Over three years, the client’s risk team had accumulated more than 140 hardcoded SQL `IF/ELSE` rules to block suspicious cross-border wire transfers. The rules conflicted with each other, ran in slow 6-hour batches, and flagged nearly 1 in 12 legitimate business customers—causing angry calls to support and delayed payroll settlements.',
       painPoints: [
-        '8.4% false-positive manual review rate causing 24-hour settlement delays for prime merchants.',
-        'Batch fraud scoring ran every 6 hours—too late to halt instant settlement rails.',
-        'Zero graph visibility into shared device fingerprints, beneficial owner overlaps, and IP subnets.',
+        '8.4% of all legitimate B2B transactions were getting stuck in manual review queues for up to 24 hours.',
+        'The checkout and payout API had a strict 50-millisecond budget for fraud checks, ruling out heavy unoptimized models.',
+        'Compliance officers couldn’t accept a "black box" score—they needed to see the exact top 3 reasons why a transfer was flagged.',
       ],
-      baselineCost: '$3.3M combined annual chargeback losses and merchant churn from frozen accounts.',
+      baselineCost:
+        'High compliance review headcount, frustrated enterprise customers, and $2M+ in annual fraud slip-through.',
     },
     solution: {
       architectureOverview:
-        'Architected an event-driven streaming pipeline using Apache Kafka and Redis Enterprise for sub-10ms sliding-window velocity features, paired with an ONNX-compiled LightGBM + Graph Embedding inference microservice deployed on Kubernetes.',
+        'To hit the 50ms latency SLA, I couldn’t query PostgreSQL at transaction time. I built a Kafka streaming consumer that keeps rolling 1-minute, 1-hour, and 30-day velocity counters warm in Redis. When a payment hits the FastAPI endpoint, it grabs the Redis features in 4ms, runs a quantized LightGBM model via ONNX Runtime, and returns both the risk score and top reason codes.',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'Real-Time Streaming Feature Aggregation',
+          title: 'Sub-10ms Sliding-Window Features with Kafka & Redis',
           detail:
-            'Engineered Kafka consumers computing 65+ real-time behavioral ratios (1-minute, 1-hour, and 30-day transaction velocity deltas) stored in low-latency Redis feature tables.',
+            'I wrote Python/Kafka streaming workers that track 65+ live behavioral signals per merchant—like sudden beneficiary country changes, IP subnet overlaps, and invoice-size spikes—stored in Redis with automatic TTL expiry.',
         },
         {
           stepNumber: '02',
-          title: 'Heterogeneous Graph Entity Resolution',
+          title: 'Catching Shared Devices & Mule Rings with Graph Features',
           detail:
-            'Extracted bipartite graph embeddings linking corporate tax IDs, device telemetry, and beneficiary IBANs to expose multi-hop synthetic mule networks.',
+            'Fraudsters often open multiple shell accounts sharing the same browser fingerprint or bank routing paths. I added a lightweight graph-feature job that flags hidden links between seemingly unrelated corporate accounts.',
         },
         {
           stepNumber: '03',
-          title: 'ONNX Runtime Deployment & SHAP Reason Codes',
+          title: 'Compiling to ONNX & Surfacing Human-Readable Reasons',
           detail:
-            'Deployed quantized models serving predictions in 38ms P99, returning human-readable SHAP top-3 risk factors directly to the fraud analyst console.',
+            'I exported the trained LightGBM model to ONNX and wrapped it in a FastAPI microservice on Kubernetes. Every flagged transaction arrives in the compliance dashboard with clear reason tags (e.g., "Transfer 4.8x above 30-day merchant average + new beneficiary IBAN").',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '38ms', label: 'P99 end-to-end scoring latency at 4,200 TPS', timeframe: 'Live production telemetry' },
-        { value: '-52%', label: 'Reduction in false-positive merchant holds', timeframe: 'First 60 days in production' },
-        { value: '$2.7M', label: 'Annualized fraud losses prevented', timeframe: 'Audited risk ledger impact' },
-        { value: '99.98%', label: 'Streaming pipeline uptime SLA', timeframe: 'Zero dropped settlement events' },
+        { value: '38ms', label: 'P99 end-to-end API response time under load', timeframe: 'Tested up to 4,200 requests/sec' },
+        { value: '-52%', label: 'Drop in false-positive holds on good merchants', timeframe: 'Measured in first 60 days' },
+        { value: '94.6%', label: 'Fraud detection recall on out-of-time test & live traffic', timeframe: 'At <0.3% false-positive rate' },
+        { value: '$2.7M', label: 'Estimated annual fraud losses prevented', timeframe: 'First year in production' },
       ],
       executiveQuote: {
         quote:
-          'Most data scientists hand you a Jupyter Notebook and wish you luck. Pijush built the Kafka streaming consumers, the Redis feature store, the ONNX inference service, and the monitoring alerts—production-grade from day one.',
+          'Most data scientists hand you a Jupyter Notebook and expect the backend team to figure out how to make it fast. Pijush wrote the Kafka consumers, set up the Redis feature lookups, quantized the model to run in 38ms, and stayed on call with us through launch.',
         author: 'Elena Rostova',
         role: 'Head of Engineering',
         organization: 'PayBridge Global Technologies',
@@ -642,65 +648,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'clinical-nlp-ehr-extraction',
     number: '04',
-    title: 'Clinical NLP Pipeline for Unstructured EHR & Oncology Trial Matching',
-    clientType: 'Healthcare Analytics & Clinical Research Organization',
+    title: 'Clinical NLP Pipeline for Unstructured Pathology & EHR Notes',
+    clientType: 'Clinical Research & Healthcare Analytics Team',
     industry: 'Healthcare & Life Sciences',
     industryTag: 'Healthcare & Life Sciences',
     duration: '10 Weeks',
     engagementModel: 'Upwork Enterprise Contract',
-    headlineMetric: '4.2x Faster Patient Cohort Identification',
-    secondaryMetric: '96.4% F1-Score on Biomarker Entity Extraction',
-    roiSummary: 'Automated extraction of staging, biomarker mutations, and prior therapy timelines from 450,000 unstructured physician pathology notes.',
+    headlineMetric: '6 Weeks → 9 Days Cohort Screening',
+    secondaryMetric: '96.4% F1 Accuracy on Biomarker Extraction',
+    roiSummary:
+      'I built a HIPAA-compliant NLP pipeline that reads messy, dictated physician notes and pathology reports to structure oncology biomarkers into clean SQL tables.',
     twoSentenceSummary:
-      'Fine-tuned domain-specific BioBERT and clinical LLM extractors to transform free-text oncology pathology reports into OMOP-standardized relational tables. Cut clinical trial cohort screening time from 6 weeks to 9 days.',
-    stack: ['Python', 'PyTorch', 'HuggingFace', 'SpaCy', 'Snowflake', 'Docker', 'AWS SageMaker'],
+      'Drawing directly on my healthcare NLP experience from my time at Blackcoffer, I helped a clinical research team unlock 450,000 unstructured oncology notes. I combined rule-based negation detection with a fine-tuned BioClinicalBERT model so researchers could query patient eligibility in minutes instead of reading charts by hand.',
+    stack: ['Python', 'PyTorch', 'HuggingFace', 'BioBERT', 'SpaCy', 'Snowflake', 'Docker', 'AWS SageMaker'],
     category: 'llm-agents',
     categoryLabel: 'LLM & Multi-Agent RAG',
     image: IMAGES.heroArchitecture,
     problem: {
       overview:
-        'Over 80% of critical patient eligibility criteria (EGFR/ALK mutation status, ECOG performance scores, line-of-therapy progression) were locked inside unstructured clinician dictation notes and scanned pathology PDFs, requiring teams of registered nurses to manually read thousands of charts per trial.',
+        'In oncology clinical trials, the most important patient details—like whether a tumor is EGFR-positive, the patient’s ECOG score, or why they stopped a previous chemotherapy—aren’t in neat database columns. They are buried inside dictated doctor notes full of typos, shorthand, and phrases like "ruled out EGFR mutation." Nurses were spending 6+ weeks manually reading PDFs just to find eligible patients for a single study.',
       painPoints: [
-        '6+ weeks required to screen patient cohorts for Phase II/III oncology trials.',
-        'High inter-annotator variance across manual chart abstraction teams.',
-        'Strict HIPAA de-identification and audit logging constraints.',
+        'Standard keyword search kept matching patients whose notes said "negative for ALK rearrangement" or "family history of breast cancer."',
+        'Strict HIPAA rules meant every note had to be scrubbed of patient names, dates, and hospital IDs before processing.',
+        'Running massive commercial LLMs on 450,000 archival notes would have blown their compute budget.',
       ],
-      baselineCost: '$1.6M annual clinical nurse abstraction overhead and delayed trial enrollment milestones.',
+      baselineCost:
+        '6 weeks of manual chart review per trial cohort and high contractor costs for clinical abstraction.',
     },
     solution: {
       architectureOverview:
-        'Built a HIPAA-compliant clinical NLP pipeline combining deterministic negation/temporal assertion rules with fine-tuned BioClinicalBERT named-entity recognition and structured JSON schema extraction.',
+        'Instead of using an expensive general-purpose LLM for everything, I designed a fast, cost-effective pipeline on AWS SageMaker. First, a clinical section-splitter isolates the actual pathology findings from family history. Then, a fine-tuned BioClinicalBERT model extracts the 28 target biomarkers and staging variables, paired with a negation/assertion classifier so we never confuse "ruled out" with "confirmed."',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'Automated PHI Scrubber & Clinical Sectionizer',
+          title: 'HIPAA Safe-Harbor Scrubbing & Note Section Splitting',
           detail:
-            'Implemented a multi-pass de-identification filter and anatomical section splitter isolating pathology findings from family history and ruled-out diagnoses.',
+            'I built a preprocessing stage using SpaCy and custom clinical regexes to strip PHI (names, MRNs, dates) and split long notes into distinct clinical sections (Diagnosis, Pathology, Medications, Family History).',
         },
         {
           stepNumber: '02',
-          title: 'Fine-Tuned Biomedical NER & Assertion Status',
+          title: 'Fine-Tuning BioClinicalBERT with Negation Awareness',
           detail:
-            'Trained custom entity recognition heads distinguishing confirmed positive mutations from negated or historical mentions with 96.4% macro F1.',
+            'Working with 2,500 gold-standard notes labeled by their lead clinicians, I fine-tuned a PyTorch/HuggingFace token & assertion classifier that distinguishes "present", "negated", "historical", and "family" mentions at 96.4% F1.',
         },
         {
           stepNumber: '03',
-          title: 'OMOP Common Data Model Normalization',
+          title: 'Mapping Outputs to Clean Snowflake SQL Tables',
           detail:
-            'Mapped extracted clinical entities to standard SNOMED-CT and RxNorm codes in Snowflake for instant SQL cohort querying by biostatisticians.',
+            'All extracted biomarkers, TNM stages, and therapy timelines are normalized into standard SNOMED-CT / RxNorm codes in Snowflake, letting biostatisticians filter cohorts with a simple SQL query.',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '4.2x', label: 'Acceleration in clinical trial cohort screening', timeframe: '6 weeks reduced to 9 days' },
-        { value: '96.4%', label: 'Macro F1-score across 28 oncology entity types', timeframe: 'Validated against MD gold standard' },
-        { value: '450k+', label: 'Pathology and EHR notes processed in batch', timeframe: 'Under $140 total compute cost' },
-        { value: '100%', label: 'HIPAA Safe Harbor de-identification compliance', timeframe: 'Zero audit exceptions' },
+        { value: '9 Days', label: 'Time to screen a trial cohort (down from 6 weeks)', timeframe: '4.2x faster turnaround' },
+        { value: '96.4%', label: 'Macro F1 score validated against physician review', timeframe: 'Across 28 oncology entities' },
+        { value: '450k+', label: 'Legacy clinical notes processed in batch', timeframe: 'Total AWS GPU cost under $140' },
+        { value: '100%', label: 'HIPAA de-identification audit pass rate', timeframe: 'Zero privacy exceptions' },
       ],
       executiveQuote: {
         quote:
-          'Pijush’s background at Blackcoffer and deep command of clinical NLP allowed us to unlock 450,000 legacy pathology records that were previously unsearchable. Our trial matching speed increased more than fourfold.',
+          'Pijush understood clinical text nuances right away—especially how tricky negation and physician shorthand can be. He turned 450,000 unsearchable text files into a clean Snowflake database our researchers query every single day.',
         author: 'Dr. Aravind Krishnan',
         role: 'Director of Clinical Data Science',
         organization: 'Oncoigens Research Partners',
@@ -710,65 +718,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'saas-revenue-churn-intelligence',
     number: '05',
-    title: 'Enterprise SaaS Telemetry Lakehouse & Predictive Churn Command Center',
-    clientType: 'Series B B2B Cloud Infrastructure Platform ($65M ARR)',
+    title: 'B2B SaaS Product Telemetry Lakehouse & 90-Day Churn Radar',
+    clientType: 'Series B Cloud SaaS Platform ($65M ARR)',
     industry: 'Enterprise SaaS & Revenue Ops',
     industryTag: 'Enterprise SaaS & Revenue Ops',
     duration: '8 Weeks',
     engagementModel: 'Direct B2B Retainer',
-    headlineMetric: '$1.95M At-Risk ARR Saved in 2 Quarters',
-    secondaryMetric: '+14% Lift in Net Dollar Retention (NDR)',
-    roiSummary: 'Unified product clickstream telemetry with Salesforce and Stripe billing data to predict enterprise churn 90 days before contract renewal.',
+    headlineMetric: '$1.95M At-Risk ARR Saved',
+    secondaryMetric: '25 hrs/wk RevOps Spreadsheet Work Cut',
+    roiSummary:
+      'I connected raw product usage logs in S3 with Stripe billing and Salesforce CRM so Customer Success managers get alerted 90 days before an enterprise account churns.',
     twoSentenceSummary:
-      'Architected a dbt + Snowflake telemetry lakehouse and survival-analysis churn propensity engine with automated Salesforce write-backs. Empowered Customer Success teams with SHAP account-health drivers and executive Power BI P&L dashboards.',
-    stack: ['Python', 'XGBoost', 'Snowflake', 'dbt', 'Airflow', 'Power BI', 'Salesforce API'],
+      'The client’s Customer Success team kept getting blindsided at renewal time because they couldn’t see when a customer’s engineering team stopped logging into the product. In 8 weeks, I built a clean dbt + Snowflake data warehouse, trained an XGBoost churn model, and pushed daily account health scores straight into Salesforce.',
+    stack: ['Python', 'XGBoost', 'Snowflake', 'dbt', 'Apache Airflow', 'Power BI', 'Salesforce API'],
     category: 'bi-automation',
     categoryLabel: 'Decision BI & Automation',
     image: IMAGES.heroArchitecture,
     problem: {
       overview:
-        'Customer Success Managers only discovered enterprise account dissatisfaction 30 days prior to annual renewal—when workspace adoption had already collapsed. Product telemetry lived in raw S3 JSON logs, completely disconnected from Salesforce CRM and Stripe billing ledgers.',
+        'The company had plenty of data, but it was sitting in three different silos: raw clickstream JSON logs in AWS S3, subscription invoices in Stripe, and account notes in Salesforce. Account managers only found out a $100k+ customer was unhappy when the client refused to renew 30 days before the contract ended—by which point usage had already been dead for months.',
       painPoints: [
-        '$4.2M in preventable annual logo churn across mid-market and enterprise tiers.',
-        'RevOps spent 25+ hours every Monday manually reconciling ARR cohorts in spreadsheets.',
-        'Zero visibility into feature-level adoption decay or seat utilization drops.',
+        'Product usage logs were messy nested JSON files in S3 that no one outside backend engineering could query.',
+        'RevOps spent every Monday morning stitching Stripe and Salesforce exports together in Google Sheets for the leadership meeting.',
+        'Account managers didn’t want another separate dashboard to log into—they wanted alerts inside Salesforce where they already worked.',
       ],
-      baselineCost: '$4.2M annual ARR churn and fragmented board reporting.',
+      baselineCost:
+        'Over $4M in preventable annual churn and 25+ hours a week wasted on manual RevOps reporting.',
     },
     solution: {
       architectureOverview:
-        'Built an automated ELT lakehouse in Snowflake using Airflow and dbt, feeding a gradient-boosted survival analysis model that scores every enterprise account daily and syncs SHAP risk explanations directly into Salesforce Account records and Power BI.',
+        'I started by building a rock-solid data foundation in Snowflake using Airflow and dbt, matching workspace IDs from the product logs to corporate accounts in Salesforce. Once the data was clean, I trained an XGBoost churn propensity model and wrote a lightweight Python sync script that pushes both the health score and the specific usage drop reasons directly onto the Salesforce Account page.',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'Unified Product Telemetry & Billing Marts',
+          title: 'Unifying S3 Event Logs, Stripe & Salesforce in dbt',
           detail:
-            'Modeled 180M+ monthly product events alongside Stripe invoice history and Zendesk support ticket sentiment inside modular dbt data marts.',
+            'I built modular dbt models in Snowflake that roll up 180M+ monthly product events into clean account-level metrics: active seats vs. licensed seats, core feature stickiness, API error rates, and support ticket volume.',
         },
         {
           stepNumber: '02',
-          title: '90-Day Renewal Risk & SHAP Driver Attribution',
+          title: 'Predicting Churn 90 Days Out with Clear Explanations',
           detail:
-            'Trained survival-analysis and XGBoost models identifying early seat-utilization decay 90 days ahead of renewal with 89.4% precision.',
+            'A score of "78% churn risk" isn’t helpful unless the CSM knows what to do. I used SHAP values alongside XGBoost so every flagged account shows the exact driver (e.g., "Active admin logins dropped 64% over the last 21 days").',
         },
         {
           stepNumber: '03',
-          title: 'Reverse-ETL CRM Write-Back & Executive BI Suite',
+          title: 'Pushing Alerts to Salesforce & Building the Exec Power BI',
           detail:
-            'Pushed daily health scores and top-3 risk reasons into Salesforce triggers while deploying a board-ready Power BI Net Dollar Retention command center.',
+            'I wired an automated daily job that updates custom fields in Salesforce and triggers a Slack alert for the account owner, plus an executive Power BI suite tracking Net Dollar Retention (NDR) and cohort payback automatically.',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '$1.95M', label: 'Annual Recurring Revenue retained via early intervention', timeframe: 'First 6 months post-launch' },
-        { value: '89.4%', label: 'Precision on 90-day renewal risk predictions', timeframe: 'Validated across 1,400+ B2B accounts' },
-        { value: '25 hrs/wk', label: 'RevOps manual spreadsheet reporting eliminated', timeframe: '100% automated dbt + Power BI' },
-        { value: '+14%', label: 'Improvement in Net Dollar Retention (NDR)', timeframe: 'Year-over-year cohort delta' },
+        { value: '$1.95M', label: 'At-risk ARR saved through early CSM outreach', timeframe: 'First 2 quarters after launch' },
+        { value: '89.4%', label: 'Precision on 90-day renewal risk alerts', timeframe: 'Across 1,400+ B2B accounts' },
+        { value: '25 hrs/wk', label: 'Manual Monday RevOps spreadsheet work eliminated', timeframe: 'Replaced by dbt + Power BI' },
+        { value: '+14%', label: 'Lift in Net Dollar Retention (NDR)', timeframe: 'Year-over-year cohort comparison' },
       ],
       executiveQuote: {
         quote:
-          'We went from flying blind at renewal time to having a 90-day early warning radar inside Salesforce. Pijush bridged our raw engineering logs and executive revenue strategy seamlessly.',
+          'We went from getting surprised by cancellations 2 weeks before renewal to having a 90-day early warning system right inside Salesforce. Pijush cleaned up our messy S3 logs and delivered the whole pipeline in under two months.',
         author: 'Claire Sterling',
         role: 'Chief Revenue Officer',
         organization: 'CloudScale Systems Inc.',
@@ -778,65 +788,67 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'industrial-iot-predictive-maintenance',
     number: '06',
-    title: 'Industrial IoT Streaming Telemetry & Predictive Maintenance Engine',
-    clientType: 'Global Precision Manufacturing & Energy Equipment Operator',
+    title: 'Plant-Floor IoT Sensor Streaming & Bearing Failure Predictor',
+    clientType: 'Precision Manufacturing & Heavy Equipment Operator',
     industry: 'Industrial & Energy Analytics',
     industryTag: 'Industrial & Energy Analytics',
     duration: '12 Weeks',
     engagementModel: 'Upwork Enterprise Contract',
-    headlineMetric: '-47% Unplanned Equipment Downtime',
-    secondaryMetric: '$2.2M Annual Maintenance & Scrap Savings',
-    roiSummary: 'Deployed real-time LSTM-Autoencoder vibration and thermal anomaly detection across 1,200+ industrial CNC and turbine assets.',
+    headlineMetric: '47% Less Unplanned Line Downtime',
+    secondaryMetric: '14–18 Days Advance Warning on Failures',
+    roiSummary:
+      'I built a real-time vibration and temperature anomaly detector across 1,200+ factory machines that warns maintenance crews two weeks before a spindle or bearing fails.',
     twoSentenceSummary:
-      'Engineered an edge-to-cloud MQTT and Apache Kafka telemetry pipeline processing 50Hz sensor waveforms into a PyTorch anomaly detection engine. Predicted bearing and spindle failures up to 18 days prior to catastrophic breakdown.',
+      'The client’s factories were losing $45,000 an hour whenever a high-speed CNC spindle or compressor failed mid-shift, even though their machines were streaming 50Hz sensor data that nobody was analyzing. I built a Kafka + TimescaleDB pipeline and a PyTorch autoencoder model that spots subtle vibration shifts weeks before a breakdown.',
     stack: ['Python', 'PyTorch', 'Apache Kafka', 'TimescaleDB', 'FastAPI', 'Docker', 'Streamlit'],
     category: 'predictive-ml',
     categoryLabel: 'Predictive ML & Forecasting',
     image: IMAGES.supplyChain,
     problem: {
       overview:
-        'Unscheduled spindle and compressor failures across 6 manufacturing plants halted production lines for 14–36 hours per incident, costing $45,000 per hour in lost output and Emergency OEM part shipments.',
+        'Across six manufacturing plants, the client had vibration, acoustic, and temperature sensors attached to over 1,200 critical machines. However, the local SCADA system only rang an alarm when vibration crossed a hard emergency limit—by which time the bearing was already seized and the production line had to shut down for up to 36 hours waiting for spare parts.',
       painPoints: [
-        'Reactive maintenance only triggered after physical vibration thresholds were breached.',
-        'High-frequency 50Hz SCADA sensor logs were overwritten every 72 hours without historical analysis.',
-        'Fixed-interval preventive maintenance replaced healthy components prematurely.',
+        'Raw 50Hz sensor logs were being overwritten every 3 days on local plant servers without ever being stored for analysis.',
+        'True breakdown events were rare and varied by machine type, so simple supervised classification failed.',
+        'Plant maintenance engineers needed a dead-simple visual screen showing which specific machine needed inspection and why.',
       ],
-      baselineCost: '$3.9M annual unplanned downtime losses and emergency maintenance spend.',
+      baselineCost:
+        '$3.9M a year in halted production lines, scrapped batches, and rushed air-freight spare parts.',
     },
     solution: {
       architectureOverview:
-        'Built an edge-to-cloud streaming pipeline using Kafka and TimescaleDB, extracting Fast Fourier Transform (FFT) spectral features every 60 seconds and scoring Remaining Useful Life (RUL) via a PyTorch LSTM-Autoencoder.',
+        'Because actual machine breakdowns are rare in historical data, I framed this as an unsupervised anomaly and degradation problem. First, I piped the raw sensor streams via MQTT and Kafka into TimescaleDB and extracted rolling Fast Fourier Transform (FFT) frequency features. Then I trained a PyTorch LSTM-Autoencoder on healthy operating cycles so it immediately spots when a machine’s vibration signature starts drifting.',
       engineeringSteps: [
         {
           stepNumber: '01',
-          title: 'High-Frequency Spectral Feature Extraction',
+          title: 'Turning Noisy 50Hz Waveforms into Clean Spectral Features',
           detail:
-            'Processed raw 50Hz triaxial vibration, acoustic, and thermal sensor streams into rolling FFT harmonic energy bands stored in TimescaleDB.',
+            'Raw vibration numbers jump around constantly. I wrote a Python signal-processing worker that computes 60-second rolling FFT harmonic energy bands and thermal ratios, compressing terabytes of raw noise into clean time-series tables in TimescaleDB.',
         },
         {
           stepNumber: '02',
-          title: 'Unsupervised LSTM-Autoencoder & RUL Survival Model',
+          title: 'Training a PyTorch Autoencoder on Healthy Machine Cycles',
           detail:
-            'Trained reconstruction-error anomaly detectors paired with Weibull survival heads predicting failure windows 14–18 days in advance.',
+            'I trained an LSTM-Autoencoder to reconstruct normal vibration patterns for each asset class, paired with a survival-curve head that estimates Remaining Useful Life (RUL) and suppresses one-off sensor glitches.',
         },
         {
           stepNumber: '03',
-          title: 'Plant Floor Control Console & Work-Order Automation',
+          title: 'Building the Plant-Floor Streamlit Console & SAP Ticket Hook',
           detail:
-            'Built a real-time Streamlit & FastAPI plant reliability console that automatically generates SAP maintenance tickets when anomaly thresholds persist.',
+            'I deployed a Dockerized FastAPI + Streamlit reliability console for shift engineers. When a machine’s degradation score stays elevated for 4 consecutive hours, it automatically drafts a preventive maintenance work order in SAP.',
         },
       ],
     },
     impact: {
       metrics: [
-        { value: '-47%', label: 'Reduction in unplanned production line downtime', timeframe: 'Across 1,200+ monitored assets' },
-        { value: '$2.2M', label: 'Annualized OEE and maintenance cost savings', timeframe: 'Audited plant P&L impact' },
-        { value: '18 Days', label: 'Median advance warning prior to component failure', timeframe: 'At 93.8% precision' },
-        { value: '60s', label: 'End-to-end sensor-to-alert telemetry latency', timeframe: '24/7 continuous edge streaming' },
+        { value: '-47%', label: 'Drop in unplanned mid-shift line stoppages', timeframe: 'Across 1,200+ monitored machines' },
+        { value: '18 Days', label: 'Median early warning before bearing/spindle failure', timeframe: 'Validated on plant floor' },
+        { value: '$2.2M', label: 'Annual savings in prevented downtime & scrap', timeframe: 'Audited plant operations' },
+        { value: '60s', label: 'Sensor-to-dashboard update interval', timeframe: 'Running 24/7 in Docker' },
       ],
       executiveQuote: {
         quote:
-          'Pijush turned noisy SCADA sensor logs into an 18-day early warning system that our plant reliability engineers trust every single shift.',
+          'Our plant engineers are skeptical of software buzzwords, but Pijush won them over in week three when his model flagged a worn spindle bearing 16 days before it would have wrecked a production run. It feels like a tool built by a real engineer.',
         author: 'Dietrich Weber',
         role: 'VP of Global Manufacturing Operations',
         organization: 'KronoTech Industrial AG',

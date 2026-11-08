@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   CASE_STUDIES,
   SOLUTION_PAGES,
@@ -684,349 +685,433 @@ export default function App() {
       </div>
 
       {/* =====================================================================
-          MAIN VIEW ROUTER
+          MAIN VIEW ROUTER (Animated Page Transitions & Scroll Reveals)
          ===================================================================== */}
-      <main className="flex-1">
-        {/* =========================================================
-            1. HOME VIEW
-           ========================================================= */}
-        {activeView === 'home' && (
-          <div>
-            {/* Hero Split Section */}
-            <section className="max-w-[1200px] mx-auto px-6 pt-14 pb-16">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-                <div className="lg:col-span-7 flex flex-col justify-between">
-                  <div>
-                    <p className="text-xs font-mono-tabular text-blue-400 tracking-wide">
-                      Principal Data Science, AI &amp; Machine Learning Practice · India (Global Delivery)
-                    </p>
-                    <h1 className="mt-4 text-4xl sm:text-5xl lg:text-[52px] font-bold tracking-tight text-white leading-[1.12]">
-                      Architecting Production AI &amp; Data Systems That Compound Enterprise Margin.
-                    </h1>
-                    <p className="mt-6 text-base text-slate-300 leading-relaxed max-w-[65ch]">
-                      Over 80% of corporate machine learning and LLM initiatives stall inside experimental notebooks. I partner directly with CTOs, VPs of Engineering, and high-growth founders to engineer fault-tolerant data lakehouses, citation-grounded AI agents, and predictive models that generate audited P&amp;L returns—without big-consultancy overhead.
-                    </p>
-                  </div>
+      <main className="flex-1 relative overflow-hidden">
+        {/* Ambient Cyber Glow Backdrop */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-tech-grid opacity-60" />
+        <div className="pointer-events-none absolute -top-36 left-1/4 w-[480px] h-[480px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse-glow" />
+        <div className="pointer-events-none absolute top-48 right-1/5 w-[380px] h-[380px] rounded-full bg-cyan-500/8 blur-[110px] animate-float-slow" />
 
-                  <div className="mt-8 pt-6 border-t border-slate-800/80">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => navigateContact()}
-                        className="px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-                      >
-                        Book a Consultation
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => navigatePortfolio('all', 'All Industries')}
-                        className="px-6 py-3 text-sm font-medium text-slate-200 border border-slate-700 rounded-lg hover:border-slate-500 hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-                      >
-                        Explore Portfolio Projects
-                      </button>
-                    </div>
-                    <p className="mt-4 text-xs text-slate-400">
-                      Direct Principal Execution · 100% Client IP Ownership · Production Prototype in 14 Days
-                    </p>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-5 flex flex-col">
-                  <div className="relative h-full min-h-[340px] rounded-2xl border border-slate-800 bg-[#11141D] overflow-hidden flex flex-col justify-between">
-                    <div className="relative h-64 lg:h-full w-full overflow-hidden">
-                      <ResilientImage
-                        src={IMAGES.heroArchitecture}
-                        alt="Enterprise Neural Network and Distributed Cloud Data Pipeline Architecture"
-                        fallbackTitle="Enterprise AI & Lakehouse Architecture"
-                        fallbackSubtitle="Distributed Ingestion · Multi-Agent RAG · Real-Time Inference"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-[#090A0F]/40 to-transparent" />
-                    </div>
-                    <div className="relative z-10 p-6 bg-[#11141D]/95 border-t border-slate-800/80">
-                      <p className="text-xs font-mono-tabular text-blue-400">
-                        Full-Lifecycle Systems Engineering
-                      </p>
-                      <p className="mt-1 text-sm font-semibold text-white">
-                        From Raw Kafka &amp; Snowflake Ingestion to Sub-50ms Containerized Inference APIs
-                      </p>
-                      <p className="mt-2 text-xs font-mono-tabular text-slate-400">
-                        Python · PyTorch · LangGraph · Airflow · dbt · Qdrant · FastAPI · AWS
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Full-Width 4-Column KPI Strip */}
-              <div className="mt-12 pt-10 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div>
-                  <p className="text-3xl font-bold font-mono-tabular text-white">$8.8M+</p>
-                  <p className="mt-1.5 text-xs text-slate-300 font-medium">
-                    Verified Annualized Client Impact
-                  </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
-                    Across working capital unlocked, fraud prevented &amp; analyst hours saved
-                  </p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold font-mono-tabular text-white">-68%</p>
-                  <p className="mt-1.5 text-xs text-slate-300 font-medium">
-                    Document &amp; Compliance Audit Time
-                  </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
-                    Achieved via multi-agent hybrid RAG over 1.8M+ enterprise records
-                  </p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold font-mono-tabular text-white">99.2%</p>
-                  <p className="mt-1.5 text-xs text-slate-300 font-medium">
-                    Citation Grounding Accuracy
-                  </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
-                    Deterministic source-offset verification for regulated industries
-                  </p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold font-mono-tabular text-white">14 Days</p>
-                  <p className="mt-1.5 text-xs text-slate-300 font-medium">
-                    Time to Production Prototype
-                  </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
-                    Deployed directly inside your private AWS, GCP, or Azure VPC
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* Core Solutions Preview */}
-            <section className="border-t border-slate-800/80 bg-[#0B0D14] py-20">
-              <div className="max-w-[1200px] mx-auto px-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                  <div>
-                    <p className="text-xs font-mono-tabular text-blue-400">
-                      Core Practice Pillars
-                    </p>
-                    <h2 className="mt-2 text-3xl font-bold text-white">
-                      Production Architecture Built for Measurable ROI
-                    </h2>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={navigateSolutionsHub}
-                    className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+        <AnimatePresence mode="wait">
+          {/* =========================================================
+              1. HOME VIEW
+             ========================================================= */}
+          {activeView === 'home' && (
+            <motion.div
+              key="view-home"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10"
+            >
+              {/* Hero Split Section */}
+              <section className="max-w-[1200px] mx-auto px-6 pt-14 pb-16">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+                  <motion.div
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.55, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+                    className="lg:col-span-7 flex flex-col justify-between"
                   >
-                    Explore All Solutions &amp; Industries &rarr;
-                  </button>
+                    <div>
+                      <p className="text-xs font-mono-tabular text-blue-400 tracking-wide">
+                        Independent Data Science, AI &amp; Machine Learning Consultant · India (Global Delivery)
+                      </p>
+                      <h1 className="mt-4 text-4xl sm:text-5xl lg:text-[52px] font-bold tracking-tight text-white leading-[1.12]">
+                        Building Production AI &amp; Data Systems That Actually Ship and Pay Off.
+                      </h1>
+                      <p className="mt-6 text-base text-slate-300 leading-relaxed max-w-[65ch]">
+                        Most machine learning and LLM projects look great in a slide deck or a Jupyter Notebook and then fall apart when they hit real-world messy data. I work directly with founders, CTOs, and engineering leads to build reliable data pipelines, citation-backed AI agents, and forecasting models that run cleanly in production—without agency middlemen.
+                      </p>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t border-slate-800/80">
+                      <div className="flex flex-wrap items-center gap-4">
+                        <motion.button
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => navigateContact()}
+                          className="px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-lg shadow-blue-600/20"
+                        >
+                          Book a Consultation
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          type="button"
+                          onClick={() => navigatePortfolio('all', 'All Industries')}
+                          className="px-6 py-3 text-sm font-medium text-slate-200 border border-slate-700 rounded-lg hover:border-blue-500/60 hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                        >
+                          Explore Portfolio Projects
+                        </motion.button>
+                      </div>
+                      <p className="mt-4 text-xs text-slate-400">
+                        1-on-1 Execution by Pijush Pathak · 100% Client IP Ownership · Working Prototype in 14 Days
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                    className="lg:col-span-5 flex flex-col"
+                  >
+                    <div className="relative h-full min-h-[340px] rounded-2xl border border-slate-800 hover:border-blue-500/50 transition-colors bg-[#11141D] overflow-hidden flex flex-col justify-between group shadow-2xl">
+                      <div className="h-0.5 w-full stream-line" />
+                      <div className="relative h-64 lg:h-full w-full overflow-hidden">
+                        <ResilientImage
+                          src={IMAGES.heroArchitecture}
+                          alt="Enterprise Neural Network and Distributed Cloud Data Pipeline Architecture"
+                          fallbackTitle="Enterprise AI & Lakehouse Architecture"
+                          fallbackSubtitle="Distributed Ingestion · Multi-Agent RAG · Real-Time Inference"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-[#090A0F]/40 to-transparent" />
+                      </div>
+                      <div className="relative z-10 p-6 bg-[#11141D]/95 border-t border-slate-800/80">
+                        <p className="text-xs font-mono-tabular text-blue-400">
+                          End-to-End Engineering Ownership
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-white">
+                          From Raw Kafka &amp; Snowflake Pipelines to Fast, Dockerized APIs
+                        </p>
+                        <p className="mt-2 text-xs font-mono-tabular text-slate-400">
+                          Python · PyTorch · LangGraph · Airflow · dbt · Qdrant · FastAPI · AWS
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  <div className="lg:col-span-5 rounded-2xl border border-slate-800 bg-[#11141D] p-8 flex flex-col justify-between">
+                {/* Full-Width 4-Column KPI Strip */}
+                <div className="mt-12 pt-10 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {[
+                    {
+                      val: '$8.8M+',
+                      title: 'Verified Client Impact',
+                      sub: 'Across freed inventory capital, fraud blocked & analyst hours saved',
+                    },
+                    {
+                      val: '4.5h → 19m',
+                      title: 'Contract & Document Audit Time',
+                      sub: 'Achieved with hybrid keyword + vector RAG over 1.8M+ passages',
+                    },
+                    {
+                      val: '99.2%',
+                      title: 'Citation Grounding Accuracy',
+                      sub: 'Every answer linked back to exact PDF page & paragraph offsets',
+                    },
+                    {
+                      val: '14 Days',
+                      title: 'Time to Working Prototype',
+                      sub: 'Deployed directly inside your private AWS, GCP, or Azure account',
+                    },
+                  ].map((kpi, idx) => (
+                    <motion.div
+                      key={kpi.title}
+                      initial={{ opacity: 0, y: 18 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{ duration: 0.45, delay: idx * 0.08 }}
+                    >
+                      <p className="text-3xl font-bold font-mono-tabular text-white">{kpi.val}</p>
+                      <p className="mt-1.5 text-xs text-slate-300 font-medium">{kpi.title}</p>
+                      <p className="mt-0.5 text-xs text-slate-500">{kpi.sub}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Core Solutions Preview */}
+              <section className="border-t border-slate-800/80 bg-[#0B0D14] py-20">
+                <div className="max-w-[1200px] mx-auto px-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.45 }}
+                    className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                  >
                     <div>
                       <p className="text-xs font-mono-tabular text-blue-400">
-                        01. Enterprise Data Architecture
+                        What I Build
                       </p>
-                      <h3 className="mt-3 text-xl font-bold text-white">
-                        Fault-Tolerant Lakehouses &amp; Automated ELT Pipelines
-                      </h3>
-                      <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-                        Unify fragmented ERP, CRM, and event telemetry into high-reliability Snowflake, BigQuery, or PostgreSQL warehouses. I replace brittle cron jobs with automated Airflow &amp; dbt pipelines that cut cloud compute spend by up to 45%.
-                      </p>
-                    </div>
-                    <div className="mt-8 pt-5 border-t border-slate-800/80 flex items-center justify-between gap-4">
-                      <span className="text-xs font-mono-tabular text-slate-400">
-                        Airflow · dbt · Snowflake · Kafka · Spark
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => openSolutionDetailPage('data-engineering-pipelines')}
-                        className="text-xs font-semibold text-white hover:text-blue-400 whitespace-nowrap shrink-0 cursor-pointer"
-                      >
-                        Open Solution Page &rarr;
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-7 rounded-2xl border border-slate-800 bg-[#11141D] p-8 flex flex-col justify-between">
-                    <div>
-                      <p className="text-xs font-mono-tabular text-blue-400">
-                        02. Predictive AI/ML Models &amp; Custom LLM Agents
-                      </p>
-                      <h3 className="mt-3 text-xl font-bold text-white">
-                        Multi-Agent RAG Systems &amp; Probabilistic Forecasting Engines
-                      </h3>
-                      <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-                        Whether deploying citation-verified AI agents over millions of private legal/clinical documents or engineering hierarchical PyTorch &amp; XGBoost models for SKU demand forecasting and sub-50ms fraud detection, every model is calibrated directly to your unit economics.
-                      </p>
-                    </div>
-                    <div className="mt-8 pt-5 border-t border-slate-800/80 flex items-center justify-between gap-4">
-                      <span className="text-xs font-mono-tabular text-slate-400">
-                        PyTorch · LangGraph · Qdrant · XGBoost · AWS Bedrock
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => openSolutionDetailPage('custom-llm-ai-agents')}
-                        className="text-xs font-semibold text-white hover:text-blue-400 whitespace-nowrap shrink-0 cursor-pointer"
-                      >
-                        Open Solution Page &rarr;
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-12 rounded-2xl border border-slate-800 bg-[#11141D] p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-                    <div className="max-w-3xl">
-                      <p className="text-xs font-mono-tabular text-blue-400">
-                        03. Business Intelligence &amp; Decision Automation
-                      </p>
-                      <h3 className="mt-2 text-xl font-bold text-white">
-                        Executive P&amp;L Command Centers &amp; Low-Latency Inference Microservices
-                      </h3>
-                      <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-                        Insights trapped in notebooks generate zero revenue. I deliver the last-mile FastAPI microservices, automated ERP/CRM write-backs, and interactive Power BI &amp; Tableau executive suites that turn model predictions into daily operational action.
-                      </p>
-                      <p className="mt-4 text-xs font-mono-tabular text-slate-400">
-                        FastAPI · Power BI · Tableau · Streamlit · Docker · Kubernetes
-                      </p>
+                      <h2 className="mt-2 text-3xl font-bold text-white">
+                        Practical Data &amp; AI Systems Built Around Your Bottom Line
+                      </h2>
                     </div>
                     <button
                       type="button"
-                      onClick={() => openSolutionDetailPage('process-automation-bi')}
-                      className="px-5 py-2.5 text-xs font-semibold text-white bg-slate-800 border border-slate-700 rounded-lg hover:bg-blue-600 hover:border-blue-500 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                      onClick={navigateSolutionsHub}
+                      className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                     >
-                      Open Solution Page &rarr;
+                      Explore All Solutions &amp; Industries &rarr;
                     </button>
-                  </div>
-                </div>
-              </div>
-            </section>
+                  </motion.div>
 
-            {/* Why Select Me Section */}
-            <section className="py-20 border-t border-slate-800/80">
-              <div className="max-w-[1200px] mx-auto px-6">
-                <div className="max-w-3xl mb-12">
-                  <p className="text-xs font-mono-tabular text-blue-400">
-                    Why Select Pijush Pathak
-                  </p>
-                  <h2 className="mt-2 text-3xl font-bold text-white">
-                    Enterprise Consulting Rigor Without Agency Overhead
-                  </h2>
-                  <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-                    Having engineered production systems as a Data Scientist at Blackcoffer with a formal B.Tech in Computer Science &amp; Engineering, I bring institutional-grade architectural discipline directly to your engineering team—eliminating middlemen and junior handoffs.
-                  </p>
-                </div>
-
-                <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#11141D]">
-                  <table className="w-full text-left border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-800 text-xs font-mono-tabular text-slate-400 bg-[#0D1017]">
-                        <th className="py-4 px-6">Evaluation Criterion</th>
-                        <th className="py-4 px-6">Traditional Big Consultancy</th>
-                        <th className="py-4 px-6">Generic Freelance Coder</th>
-                        <th className="py-4 px-6 text-blue-400">
-                          Pijush Pathak (Independent Principal)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/80">
-                      {WHY_SELECT_COMPARISON.map((row) => (
-                        <tr key={row.dimension} className="hover:bg-slate-900/40 transition-colors">
-                          <td className="py-5 px-6 font-semibold text-white align-top whitespace-nowrap">
-                            {row.dimension}
-                          </td>
-                          <td className="py-5 px-6 text-slate-400 align-top">
-                            {row.bigConsultancy}
-                          </td>
-                          <td className="py-5 px-6 text-slate-400 align-top">
-                            {row.genericFreelancer}
-                          </td>
-                          <td className="py-5 px-6 text-slate-100 font-medium align-top">
-                            {row.independentConsultant}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-
-            {/* Featured Portfolio Projects Preview */}
-            <section className="py-20 border-t border-slate-800/80 bg-[#0B0D14]">
-              <div className="max-w-[1200px] mx-auto px-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                  <div>
-                    <p className="text-xs font-mono-tabular text-blue-400">
-                      Verified Engagements
-                    </p>
-                    <h2 className="mt-2 text-3xl font-bold text-white">
-                      Featured Portfolio Projects
-                    </h2>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => navigatePortfolio('all', 'All Industries')}
-                    className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-                  >
-                    View All Portfolio Projects &rarr;
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {CASE_STUDIES.slice(0, 3).map((study) => (
-                    <article
-                      key={study.id}
-                      onClick={() => openProjectDetailPage(study.id)}
-                      className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500/70 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group"
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.4 }}
+                      className="lg:col-span-5 rounded-2xl border border-slate-800 hover:border-blue-500/60 bg-[#11141D] p-8 flex flex-col justify-between transition-colors"
                     >
                       <div>
-                        <div className="aspect-[4/3] w-full overflow-hidden border-b border-slate-800 bg-slate-950 relative">
-                          <ResilientImage
-                            src={study.image}
-                            alt={study.title}
-                            fallbackTitle={study.title}
-                            fallbackSubtitle={study.industry}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-transparent to-transparent" />
-                          <div className="absolute bottom-3 left-5 right-5">
-                            <p className="text-xs font-mono-tabular text-blue-400">
-                              Project {study.number} · {study.industry}
+                        <p className="text-xs font-mono-tabular text-blue-400">
+                          01. Data Engineering &amp; Pipelines
+                        </p>
+                        <h3 className="mt-3 text-xl font-bold text-white">
+                          Clean Warehouses &amp; Automated Airflow / dbt Pipelines
+                        </h3>
+                        <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                          If your data is scattered across ERP tables, Stripe, Salesforce, and S3 logs, no AI model will save you. I build clean, tested Snowflake, BigQuery, and PostgreSQL pipelines that run on schedule and cut cloud compute bills by up to 45%.
+                        </p>
+                      </div>
+                      <div className="mt-8 pt-5 border-t border-slate-800/80 flex items-center justify-between gap-4">
+                        <span className="text-xs font-mono-tabular text-slate-400">
+                          Airflow · dbt · Snowflake · Kafka · Spark
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openSolutionDetailPage('data-engineering-pipelines')}
+                          className="text-xs font-semibold text-white hover:text-blue-400 whitespace-nowrap shrink-0 cursor-pointer"
+                        >
+                          Open Solution Page &rarr;
+                        </button>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.4, delay: 0.08 }}
+                      className="lg:col-span-7 rounded-2xl border border-slate-800 hover:border-blue-500/60 bg-[#11141D] p-8 flex flex-col justify-between transition-colors"
+                    >
+                      <div>
+                        <p className="text-xs font-mono-tabular text-blue-400">
+                          02. Predictive ML &amp; Custom LLM / RAG Agents
+                        </p>
+                        <h3 className="mt-3 text-xl font-bold text-white">
+                          Hallucination-Free Document AI &amp; Forecasting Models
+                        </h3>
+                        <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                          Whether you need a private RAG assistant that reads 150-page PDFs with exact page citations, or PyTorch &amp; XGBoost models that forecast warehouse inventory and catch payment fraud in 38 milliseconds, I build and tune them end-to-end.
+                        </p>
+                      </div>
+                      <div className="mt-8 pt-5 border-t border-slate-800/80 flex items-center justify-between gap-4">
+                        <span className="text-xs font-mono-tabular text-slate-400">
+                          PyTorch · LangGraph · Qdrant · XGBoost · AWS Bedrock
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openSolutionDetailPage('custom-llm-ai-agents')}
+                          className="text-xs font-semibold text-white hover:text-blue-400 whitespace-nowrap shrink-0 cursor-pointer"
+                        >
+                          Open Solution Page &rarr;
+                        </button>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      whileHover={{ y: -4 }}
+                      transition={{ duration: 0.4, delay: 0.14 }}
+                      className="lg:col-span-12 rounded-2xl border border-slate-800 hover:border-blue-500/60 bg-[#11141D] p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 transition-colors"
+                    >
+                      <div className="max-w-3xl">
+                        <p className="text-xs font-mono-tabular text-blue-400">
+                          03. Business Intelligence &amp; Workflow Automation
+                        </p>
+                        <h3 className="mt-2 text-xl font-bold text-white">
+                          Executive Dashboards &amp; FastAPI Microservices That Plug Into Your Tools
+                        </h3>
+                        <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+                          A model sitting in a notebook doesn’t help your team on Monday morning. I wrap predictions in fast REST APIs, push alerts straight into Salesforce or SAP, and build clear Power BI, Tableau, and Streamlit dashboards your team will actually use.
+                        </p>
+                        <p className="mt-4 text-xs font-mono-tabular text-slate-400">
+                          FastAPI · Power BI · Tableau · Streamlit · Docker · Kubernetes
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => openSolutionDetailPage('process-automation-bi')}
+                        className="px-5 py-2.5 text-xs font-semibold text-white bg-slate-800 border border-slate-700 rounded-lg hover:bg-blue-600 hover:border-blue-500 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                      >
+                        Open Solution Page &rarr;
+                      </button>
+                    </motion.div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Why Select Me Section */}
+              <section className="py-20 border-t border-slate-800/80">
+                <div className="max-w-[1200px] mx-auto px-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.45 }}
+                    className="max-w-3xl mb-12"
+                  >
+                    <p className="text-xs font-mono-tabular text-blue-400">
+                      Why Work With Me Directly
+                    </p>
+                    <h2 className="mt-2 text-3xl font-bold text-white">
+                      Senior Engineering Execution Without the Agency Runaround
+                    </h2>
+                    <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                      With a B.Tech in Computer Science &amp; Engineering and hands-on experience building enterprise systems as a Data Scientist at Blackcoffer, I work directly with your team—so nothing gets lost in translation between a sales partner and a junior developer.
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5 }}
+                    className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#11141D]"
+                  >
+                    <table className="w-full text-left border-collapse text-sm">
+                      <thead>
+                        <tr className="border-b border-slate-800 text-xs font-mono-tabular text-slate-400 bg-[#0D1017]">
+                          <th className="py-4 px-6">Evaluation Criterion</th>
+                          <th className="py-4 px-6">Traditional Big Consultancy</th>
+                          <th className="py-4 px-6">Generic Freelance Coder</th>
+                          <th className="py-4 px-6 text-blue-400">
+                            Pijush Pathak (Independent Consultant)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/80">
+                        {WHY_SELECT_COMPARISON.map((row) => (
+                          <tr key={row.dimension} className="hover:bg-slate-900/40 transition-colors">
+                            <td className="py-5 px-6 font-semibold text-white align-top whitespace-nowrap">
+                              {row.dimension}
+                            </td>
+                            <td className="py-5 px-6 text-slate-400 align-top">
+                              {row.bigConsultancy}
+                            </td>
+                            <td className="py-5 px-6 text-slate-400 align-top">
+                              {row.genericFreelancer}
+                            </td>
+                            <td className="py-5 px-6 text-slate-100 font-medium align-top">
+                              {row.independentConsultant}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </motion.div>
+                </div>
+              </section>
+
+              {/* Featured Portfolio Projects Preview */}
+              <section className="py-20 border-t border-slate-800/80 bg-[#0B0D14]">
+                <div className="max-w-[1200px] mx-auto px-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.45 }}
+                    className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                  >
+                    <div>
+                      <p className="text-xs font-mono-tabular text-blue-400">
+                        Hands-On Work I’ve Shipped
+                      </p>
+                      <h2 className="mt-2 text-3xl font-bold text-white">
+                        Featured Portfolio Projects
+                      </h2>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigatePortfolio('all', 'All Industries')}
+                      className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                    >
+                      View All Portfolio Projects &rarr;
+                    </button>
+                  </motion.div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {CASE_STUDIES.slice(0, 3).map((study, idx) => (
+                      <motion.article
+                        key={study.id}
+                        initial={{ opacity: 0, y: 22 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.15 }}
+                        whileHover={{ y: -6 }}
+                        transition={{ duration: 0.4, delay: idx * 0.08 }}
+                        onClick={() => openProjectDetailPage(study.id)}
+                        className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500/70 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group shadow-lg"
+                      >
+                        <div>
+                          <div className="aspect-[4/3] w-full overflow-hidden border-b border-slate-800 bg-slate-950 relative">
+                            <ResilientImage
+                              src={study.image}
+                              alt={study.title}
+                              fallbackTitle={study.title}
+                              fallbackSubtitle={study.industry}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-transparent to-transparent" />
+                            <div className="absolute bottom-3 left-5 right-5">
+                              <p className="text-xs font-mono-tabular text-blue-400">
+                                Project {study.number} · {study.industry}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="p-6">
+                            <p className="text-sm font-mono-tabular font-semibold text-white">
+                              {study.headlineMetric}
+                            </p>
+                            <h3 className="mt-2 text-lg font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-snug">
+                              {study.title}
+                            </h3>
+                            <p className="mt-3 text-xs text-slate-300 leading-relaxed">
+                              {study.twoSentenceSummary}
                             </p>
                           </div>
                         </div>
-                        <div className="p-6">
-                          <p className="text-sm font-mono-tabular font-semibold text-white">
-                            {study.headlineMetric}
+
+                        <div className="px-6 pb-6 pt-4 border-t border-slate-800/80">
+                          <p className="text-xs font-mono-tabular text-slate-400 truncate">
+                            {study.stack.join(' · ')}
                           </p>
-                          <h3 className="mt-2 text-lg font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-snug">
-                            {study.title}
-                          </h3>
-                          <p className="mt-3 text-xs text-slate-300 leading-relaxed">
-                            {study.twoSentenceSummary}
-                          </p>
+                          <span className="mt-4 block w-full text-center py-2.5 px-4 text-xs font-semibold text-white bg-slate-800 group-hover:bg-blue-600 rounded-lg transition-colors">
+                            Open Project Page &rarr;
+                          </span>
                         </div>
-                      </div>
-
-                      <div className="px-6 pb-6 pt-4 border-t border-slate-800/80">
-                        <p className="text-xs font-mono-tabular text-slate-400 truncate">
-                          {study.stack.join(' · ')}
-                        </p>
-                        <span className="mt-4 block w-full text-center py-2.5 px-4 text-xs font-semibold text-white bg-slate-800 group-hover:bg-blue-600 rounded-lg transition-colors">
-                          Open Project Page &rarr;
-                        </span>
-                      </div>
-                    </article>
-                  ))}
+                      </motion.article>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </section>
-          </div>
-        )}
+              </section>
+            </motion.div>
+          )}
 
-        {/* =========================================================
-            2. SOLUTIONS HUB VIEW
-           ========================================================= */}
-        {activeView === 'solutions-hub' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-16">
+          {/* =========================================================
+              2. SOLUTIONS HUB VIEW
+             ========================================================= */}
+          {activeView === 'solutions-hub' && (
+            <motion.div
+              key="view-solutions-hub"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 max-w-[1200px] mx-auto px-6 py-16"
+            >
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-12 border-b border-slate-800/80">
               <div className="max-w-2xl">
                 <div className="inline-flex items-center gap-3">
@@ -1139,14 +1224,21 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* =========================================================
             3. SEPARATE DEDICATED SOLUTION PAGE (solution-detail)
            ========================================================= */}
         {activeView === 'solution-detail' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-14">
+          <motion.div
+            key={`view-solution-${activeSolution.id}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 py-14"
+          >
             <div className="mb-10 p-4 rounded-xl border border-slate-800 bg-[#11141D] flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-xs">
                 <button
@@ -1364,14 +1456,21 @@ export default function App() {
                 ))}
               </div>
             </section>
-          </div>
+          </motion.div>
         )}
 
         {/* =========================================================
             4. PORTFOLIO VIEW
            ========================================================= */}
         {activeView === 'portfolio' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-16">
+          <motion.div
+            key="view-portfolio"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 py-16"
+          >
             <div className="max-w-3xl pb-10">
               <p className="text-xs font-mono-tabular text-blue-400">
                 Portfolio &amp; Works · Categorized Production Systems
@@ -1471,11 +1570,15 @@ export default function App() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPortfolioProjects.map((project) => (
-                <article
+              {filteredPortfolioProjects.map((project, idx) => (
+                <motion.article
                   key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.38, delay: idx * 0.06 }}
                   onClick={() => openProjectDetailPage(project.id)}
-                  className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group"
+                  className="rounded-2xl border border-slate-800 bg-[#11141D] hover:border-blue-500 transition-colors overflow-hidden flex flex-col justify-between cursor-pointer group shadow-lg"
                 >
                   <div>
                     <div className="aspect-[16/10] w-full overflow-hidden border-b border-slate-800 bg-slate-950 relative">
@@ -1484,6 +1587,7 @@ export default function App() {
                         alt={project.title}
                         fallbackTitle={project.title}
                         fallbackSubtitle={project.industry}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#11141D] via-[#11141D]/20 to-transparent" />
                       <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between">
@@ -1514,17 +1618,24 @@ export default function App() {
                       Explore Project Deep Dive &rarr;
                     </span>
                   </div>
-                </article>
+                </motion.article>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* =========================================================
             5. DEDICATED PORTFOLIO PROJECT DEEP-DIVE PAGE
            ========================================================= */}
         {activeView === 'project-detail' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-14">
+          <motion.div
+            key={`view-project-${activeCaseStudy.id}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 py-14"
+          >
             <div className="mb-10 p-4 rounded-xl border border-slate-800 bg-[#11141D] flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-xs">
                 <button
@@ -1590,27 +1701,31 @@ export default function App() {
 
             <section className="py-10 border-b border-slate-800/80">
               <p className="text-xs font-mono-tabular text-blue-400 mb-6">
-                Audited Business Impact &amp; Post-Deployment Telemetry
+                Results &amp; Impact in Production
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {activeCaseStudy.impact.metrics.map((m) => (
-                  <div
+                {activeCaseStudy.impact.metrics.map((m, idx) => (
+                  <motion.div
                     key={m.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.35, delay: idx * 0.06 }}
                     className="rounded-xl border border-slate-800 bg-[#11141D] p-6"
                   >
                     <p className="text-3xl font-bold font-mono-tabular text-white">{m.value}</p>
                     <p className="mt-2 text-xs font-medium text-slate-200">{m.label}</p>
                     <p className="mt-1 text-xs text-slate-500">{m.timeframe}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </section>
 
             <section className="py-12 border-b border-slate-800/80 grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-4">
-                <p className="text-xs font-mono-tabular text-blue-400">01. The Client's Problem</p>
+                <p className="text-xs font-mono-tabular text-blue-400">01. What Was Broken</p>
                 <h2 className="mt-2 text-2xl font-bold text-white">
-                  Operational Bottlenecks &amp; Cost of Inaction
+                  The Real-World Problem I Walked Into
                 </h2>
               </div>
               <div className="lg:col-span-8 space-y-6">
@@ -1619,7 +1734,7 @@ export default function App() {
                 </p>
                 <div className="rounded-2xl border border-slate-800 bg-[#11141D] p-6 space-y-3">
                   <p className="text-xs font-mono-tabular text-slate-400">
-                    Primary Technical &amp; Commercial Pain Points
+                    What Was Causing the Bottleneck
                   </p>
                   {activeCaseStudy.problem.painPoints.map((pt) => (
                     <p key={pt} className="text-sm text-slate-200 flex items-start gap-2.5">
@@ -1629,7 +1744,7 @@ export default function App() {
                   ))}
                   <div className="pt-4 mt-4 border-t border-slate-800/80">
                     <p className="text-xs font-mono-tabular text-slate-400">
-                      Pre-Engagement Baseline Risk / Cost:{' '}
+                      What It Was Costing the Team:{' '}
                       <span className="text-white">{activeCaseStudy.problem.baselineCost}</span>
                     </p>
                   </div>
@@ -1640,10 +1755,10 @@ export default function App() {
             <section className="py-12 border-b border-slate-800/80 grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-4">
                 <p className="text-xs font-mono-tabular text-blue-400">
-                  02. The Technical Solution
+                  02. How I Built It
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-white">
-                  System Architecture &amp; Execution Phases
+                  Architecture &amp; Step-by-Step Execution
                 </h2>
               </div>
               <div className="lg:col-span-8 space-y-6">
@@ -1657,7 +1772,7 @@ export default function App() {
                       className="rounded-2xl border border-slate-800 bg-[#11141D] p-6"
                     >
                       <p className="text-xs font-mono-tabular text-blue-400">
-                        Phase {step.stepNumber} · {step.title}
+                        Step {step.stepNumber} · {step.title}
                       </p>
                       <p className="mt-2 text-sm text-slate-300 leading-relaxed">{step.detail}</p>
                     </div>
@@ -1668,15 +1783,15 @@ export default function App() {
 
             <section className="py-12 border-b border-slate-800/80 grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-4">
-                <p className="text-xs font-mono-tabular text-blue-400">03. The Tech Stack Used</p>
+                <p className="text-xs font-mono-tabular text-blue-400">03. Tools &amp; Stack</p>
                 <h2 className="mt-2 text-2xl font-bold text-white">
-                  Production Infrastructure &amp; Libraries
+                  What I Used in Production
                 </h2>
               </div>
               <div className="lg:col-span-8">
                 <div className="rounded-2xl border border-slate-800 bg-[#11141D] p-6">
                   <p className="text-xs text-slate-400 mb-3">
-                    Selected for horizontal scalability, zero vendor lock-in, and deterministic observability:
+                    Core tools, databases, and libraries I used to build and ship this system:
                   </p>
                   <p className="text-sm font-mono-tabular text-white leading-relaxed">
                     {activeCaseStudy.stack.join(' · ')}
@@ -1698,7 +1813,7 @@ export default function App() {
               </div>
               <div className="lg:col-span-4 flex flex-col items-start lg:items-end justify-center">
                 <p className="text-sm text-slate-300 mb-4 lg:text-right">
-                  Need similar architectural rigor applied to your internal data or AI roadmap?
+                  Facing a similar data or AI bottleneck on your team? Let’s talk through how I’d approach it.
                 </p>
                 <button
                   type="button"
@@ -1709,14 +1824,21 @@ export default function App() {
                 </button>
               </div>
             </section>
-          </div>
+          </motion.div>
         )}
 
         {/* =========================================================
-            7. ABOUT ME VIEW
+            6. ABOUT ME VIEW
            ========================================================= */}
         {activeView === 'about' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-16">
+          <motion.div
+            key="view-about"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 py-16"
+          >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-800/80 items-start">
               <div className="lg:col-span-7">
                 <p className="text-xs font-mono-tabular text-blue-400">
@@ -1774,14 +1896,20 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="lg:col-span-5 space-y-6">
-                <div className="rounded-2xl border border-slate-800 bg-[#11141D] overflow-hidden">
-                  <div className="aspect-[3/4] max-h-[420px] w-full overflow-hidden bg-slate-950">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="lg:col-span-5 space-y-6"
+              >
+                <div className="rounded-2xl border border-slate-800 hover:border-blue-500/50 transition-colors bg-[#11141D] overflow-hidden shadow-2xl group">
+                  <div className="aspect-[3/4] max-h-[460px] w-full overflow-hidden bg-slate-950">
                     <ResilientImage
                       src={IMAGES.portrait}
-                      alt="Pijush Pathak — Principal AI and Data Science Consultant"
+                      alt="Pijush Pathak — Independent Data Science, AI and Machine Learning Consultant"
                       fallbackTitle="Pijush Pathak"
-                      fallbackSubtitle="Principal Data Science & AI Consultant"
+                      fallbackSubtitle="Independent Data Science & AI Consultant"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                   <div className="p-6 border-t border-slate-800/80">
@@ -1814,7 +1942,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* 4-Stage Consulting Methodology */}
@@ -1891,14 +2019,21 @@ export default function App() {
                 </div>
               </div>
             </section>
-          </div>
+          </motion.div>
         )}
 
         {/* =========================================================
-            8. CONTACT VIEW (Web3Forms + Free 9AM-12AM IST Any Day Calendar + Calendly)
+            7. CONTACT VIEW (Web3Forms + Free Calendar Booking + Calendly)
            ========================================================= */}
         {activeView === 'contact' && (
-          <div className="max-w-[1200px] mx-auto px-6 py-16">
+          <motion.div
+            key="view-contact"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 py-16"
+          >
             <div className="max-w-3xl pb-12 border-b border-slate-800/80">
               <p className="text-xs font-mono-tabular text-blue-400">
                 Get In Touch · Direct Principal Consultation
@@ -2139,8 +2274,9 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </main>
 
       {/* =====================================================================
