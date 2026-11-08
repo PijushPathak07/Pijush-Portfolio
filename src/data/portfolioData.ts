@@ -1,3 +1,8 @@
+import heroArchitectureImg from '../assets/images/hero_data_architecture_1793980204682.jpg';
+import supplyChainImg from '../assets/images/case_study_supply_chain_1793980204420.jpg';
+import llmRagImg from '../assets/images/case_study_llm_rag_1793980206838.jpg';
+import finFraudImg from '../assets/images/case_study_fin_fraud_1793980207367.jpg';
+
 export interface CaseStudy {
   id: string;
   number: string;
@@ -67,10 +72,10 @@ export interface SolutionDetailPage {
 }
 
 export const IMAGES = {
-  heroArchitecture: '/src/assets/images/hero_data_architecture_1793980204682.jpg',
-  supplyChain: '/src/assets/images/case_study_supply_chain_1793980204420.jpg',
-  llmRag: '/src/assets/images/case_study_llm_rag_1793980206838.jpg',
-  finFraud: '/src/assets/images/case_study_fin_fraud_1793980207367.jpg',
+  heroArchitecture: heroArchitectureImg,
+  supplyChain: supplyChainImg,
+  llmRag: llmRagImg,
+  finFraud: finFraudImg,
   portrait: '/assets/aistudio/Gemini_Generated_Image_fjg5j0fjg5j0fjg5_2cfbd55a.png',
 };
 
