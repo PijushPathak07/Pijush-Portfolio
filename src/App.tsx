@@ -15,7 +15,6 @@ import {
   CaseStudy,
   SolutionDetailPage,
 } from './data/portfolioData';
-import { HTML_EXPORTS } from './data/htmlTemplates';
 
 type RouteView =
   | 'home'
@@ -77,11 +76,6 @@ export default function App() {
   const [openHeaderMenu, setOpenHeaderMenu] = useState<'solutions' | 'portfolio' | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
-
-  // Code Export Modal State
-  const [codeModalOpen, setCodeModalOpen] = useState(false);
-  const [selectedHtmlExport, setSelectedHtmlExport] = useState<string>('index.html');
-  const [copiedFile, setCopiedFile] = useState<string | null>(null);
 
   // Contact & Calendar Booking State
   const [contactForm, setContactForm] = useState({
@@ -202,12 +196,6 @@ export default function App() {
     return matchesCat && matchesInd;
   });
 
-  const handleCopyCode = (filename: string, code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedFile(filename);
-    setTimeout(() => setCopiedFile(null), 2200);
-  };
-
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactForm.name.trim() || !contactForm.email.includes('@') || !contactForm.brief.trim()) {
@@ -249,9 +237,6 @@ export default function App() {
       setFormSubmitting(false);
     }
   };
-
-  const currentExportObj =
-    HTML_EXPORTS.find((item) => item.filename === selectedHtmlExport) || HTML_EXPORTS[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#090A0F] text-slate-100">
@@ -673,13 +658,6 @@ export default function App() {
               <i className="fa-brands fa-github text-slate-200" />
               <span>GitHub</span>
             </a>
-            <button
-              type="button"
-              onClick={() => setCodeModalOpen(true)}
-              className="text-xs font-mono-tabular text-blue-400 hover:text-blue-300 underline underline-offset-4 cursor-pointer whitespace-nowrap shrink-0"
-            >
-              Export Pure HTML5 Source Files
-            </button>
           </div>
         </div>
       </div>
@@ -2357,67 +2335,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-
-      {/* Standalone Pure HTML5 Code Export Modal */}
-      {codeModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-5xl rounded-2xl border border-slate-800 bg-[#0D1017] overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-base font-bold text-white">
-                  Copy-Pasteable Pure HTML5 + Tailwind CDN Source Files
-                </h2>
-                <p className="text-xs text-slate-400">
-                  Select any of the 6 architectural files below to inspect or copy its standalone HTML5 code.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setCodeModalOpen(false)}
-                className="px-3 py-1.5 text-xs font-semibold text-slate-300 bg-slate-800 rounded-lg hover:text-white cursor-pointer"
-              >
-                Close ✕
-              </button>
-            </div>
-
-            <div className="px-6 py-3 border-b border-slate-800 bg-[#090A0F] flex flex-wrap items-center gap-2">
-              {HTML_EXPORTS.map((file) => (
-                <button
-                  key={file.filename}
-                  type="button"
-                  onClick={() => setSelectedHtmlExport(file.filename)}
-                  className={`px-3 py-1.5 text-xs font-mono-tabular rounded-lg transition-colors cursor-pointer ${
-                    selectedHtmlExport === file.filename
-                      ? 'bg-blue-600 text-white font-semibold'
-                      : 'bg-[#11141D] text-slate-400 hover:text-white border border-slate-800'
-                  }`}
-                >
-                  {file.filename.replace('.html', '')}
-                </button>
-              ))}
-            </div>
-
-            <div className="px-6 py-3 border-b border-slate-800 flex items-center justify-between gap-4 bg-[#11141D]">
-              <p className="text-xs text-slate-300">{currentExportObj.description}</p>
-              <button
-                type="button"
-                onClick={() => handleCopyCode(currentExportObj.filename, currentExportObj.code)}
-                className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                {copiedFile === currentExportObj.filename
-                  ? `Copied!`
-                  : `Copy HTML5 Code`}
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto font-mono-tabular text-xs text-slate-300 bg-[#07080C]">
-              <pre className="whitespace-pre-wrap break-words leading-relaxed">
-                {currentExportObj.code}
-              </pre>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
